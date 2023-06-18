@@ -6,14 +6,14 @@ interface ThemeStore {
   toggleTheme: () => void;
 }
 
-export const useThemeStore = create<ThemeStore>((set) => ({
+export const useTheme = create<ThemeStore>((set) => ({
   theme: "light",
   toggleTheme: () =>
     set((state) => ({ theme: state.theme === "light" ? "dark" : "light" })),
 }));
 
 export const ThemeProvider = () => {
-  const { theme } = useThemeStore();
+  const { theme } = useTheme();
   const htmlRef = useRef<HTMLHtmlElement | null>(null);
 
   useEffect(() => {
