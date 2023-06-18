@@ -15,6 +15,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="bg flex min-h-screen flex-col items-center justify-center">
+        <h1>teste</h1>
         <Button onClick={toggleTheme}>Primary</Button>
         <Button variant="secondary">Secondary</Button>
         <Button variant="ghost">Secondary</Button>
