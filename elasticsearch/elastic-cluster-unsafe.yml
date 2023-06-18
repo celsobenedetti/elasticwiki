@@ -1,0 +1,74 @@
+version: "3.7"
+services:
+  es1:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    hostname: es1
+    environment:
+      - xpack.security.enabled=false
+
+      - node.name=es1 # hostname
+      - cluster.name=es-t3-cluster # cluster name, needs to be the same for all nodes
+      - discovery.seed_hosts=es2,es3 # the other nodes in the cluster
+      - cluster.initial_master_nodes=es1,es2,es3 # nodes eligible to be elected as master
+      - bootstrap.memory_lock=true # along with the memlock settings below, disables swapping
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
+    ulimits: # allow the container to use more memory locked into RAM
+      memlock: # maximum locked-in-memory address space (KB), -1 means no limit
+        soft: -1
+        hard: -1
+    volumes:
+      - t3-es-data01:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200 # only exported port in the cluster
+  es2:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    environment:
+      - xpack.security.enabled=false
+
+      - node.name=es2
+      - cluster.name=es-t3-cluster
+      - discovery.seed_hosts=es1,es3
+      - cluster.initial_master_nodes=es1,es2,es3
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - t3-es-data02:/usr/share/elasticsearch/data
+  es3:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    environment:
+      - xpack.security.enabled=false
+
+      - node.name=es3
+      - cluster.name=es-t3-cluster
+      - discovery.seed_hosts=es1,es2
+      - cluster.initial_master_nodes=es1,es2,es3
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - t3-es-data03:/usr/share/elasticsearch/data
+  kibana:
+    image: docker.elastic.co/kibana/kibana:${ELASTIC_VERSION}
+    ports:
+      - 5601:5601
+    depends_on:
+      - es1
+      - es2
+      - es3
+    environment:
+      ELASTICSEARCH_HOSTS: http://es1:9200
+
+volumes:
+  t3-es-data01:
+    driver: local
+  t3-es-data02:
+    driver: local
+  t3-es-data03:
+    driver: local
