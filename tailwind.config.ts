@@ -1,4 +1,4 @@
-import { shadcnPlugin } from "./lib/shadcn-plugin";
+import { shadcnPlugin } from "./src/styles/shadcn-plugin";
 import { type Config } from "tailwindcss";
 
 export default {
