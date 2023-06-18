@@ -1,13 +1,9 @@
 import Head from "next/head";
-import { api } from "@/lib/api";
-import { Button } from "@/components/ui/button";
-import { useTheme } from "@/store/theme";
-import { Input } from "@/components/ui/input";
-import { HeroIcon, SVGShapes } from "@/components/HeroIcon";
+import SearchBar from "@/components/SearchBar";
+import { useSearch } from "@/store/search";
 
 export default function Home() {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
-  const { toggleTheme } = useTheme();
+  const { results } = useSearch();
 
   return (
     <>
@@ -17,22 +13,17 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="bg flex h-screen flex-col items-center justify-center pt-header">
-        <h1 className="my-20 text-7xl font-extrabold tracking-tight sm:text-[5rem]">
+        <h1 className="mb-20 text-7xl font-extrabold tracking-tight sm:text-[5rem]">
           Elastic<span className="text-indigo-500">T3</span>Wiki
         </h1>
 
-        <section className="flex w-10/12 max-w-sm flex-col items-center gap-2 sm:max-w-[36rem]">
-          <div className="relative w-full">
-            <HeroIcon
-              shape={SVGShapes.magnifyingGlass}
-              className="absolute bottom-0 left-2 top-0 my-auto h-5 w-5 text-slate-400"
-            />
-            <Input type="text" className="rounded-full pl-10 hover:shadow" />
-          </div>
-          <Button onClick={toggleTheme} className="w-40">
-            Search
-          </Button>
+        <section className="flex w-10/12 max-w-sm flex-col items-center gap-6 sm:max-w-[36rem]">
+          <SearchBar />
         </section>
+
+        {results?.hits.hits.map((document) => {
+          return <h1 key={document._id}>{document._source?.content}</h1>;
+        })}
       </main>
     </>
   );

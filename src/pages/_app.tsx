@@ -3,13 +3,15 @@ import { api } from "@/lib/api";
 import "@/styles/globals.css";
 import { ThemeProvider } from "@/store/theme";
 import Header from "@/components/Header";
+import { SearchProvider } from "@/store/search";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <>
-      <ThemeProvider />
-
       <Header />
+
+      <ThemeProvider />
+      <SearchProvider />
 
       <Component {...pageProps} />
     </>
