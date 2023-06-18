@@ -1,9 +1,11 @@
 import Head from "next/head";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
+import { useThemeStore } from "@/store/theme";
 
 export default function Home() {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const { toggleTheme } = useThemeStore();
 
   return (
     <>
@@ -13,7 +15,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="bg flex min-h-screen flex-col items-center justify-center">
-        <Button>Primary</Button>
+        <Button onClick={toggleTheme}>Primary</Button>
         <Button variant="secondary">Secondary</Button>
         <Button variant="ghost">Secondary</Button>
       </main>
