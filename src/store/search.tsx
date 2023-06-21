@@ -15,7 +15,9 @@ export const useSearch = create<SearchStore>((set) => ({
   results: undefined,
   setResults: (results: SearchOutput) => set({ results }),
   query: "",
-  doSearch: (query: string) => set({ query }),
+  doSearch: (query: string) => {
+    if (query) set({ query });
+  },
 }));
 
 export const SearchProvider = () => {
