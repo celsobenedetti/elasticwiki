@@ -7,8 +7,8 @@ import { useState } from "react";
 import { useSearch } from "@/store/search";
 
 export default function Header() {
-  const { theme, toggleTheme } = useTheme();
   const router = useRouter();
+  const { theme, toggleTheme } = useTheme();
 
   const isHome = router.pathname === "/";
 
@@ -40,10 +40,10 @@ export default function Header() {
 }
 
 function Search() {
-  const [query, setQuery] = useState("");
-  const { doSearch } = useSearch();
-
   const router = useRouter();
+
+  const { doSearch } = useSearch();
+  const [query, setQuery] = useState("");
 
   const searchCallback = () => {
     if (!query) return;

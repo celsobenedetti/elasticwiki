@@ -21,10 +21,10 @@ export default function Home() {
 }
 
 function Search() {
-  const [query, setQuery] = useState("");
-  const { doSearch } = useSearch();
-
   const router = useRouter();
+
+  const { doSearch } = useSearch();
+  const [query, setQuery] = useState("");
 
   const searchCallback = () => {
     if (!query) return;

@@ -7,25 +7,25 @@ type SearchOutput = RouterOutputs["elastic"]["search"] | undefined;
 interface SearchStore {
   results: SearchOutput;
   setResults: (results: SearchOutput) => void;
-  query: string;
+  searchQuery: string;
   doSearch: (query: string) => void;
 }
 
 export const useSearch = create<SearchStore>((set) => ({
   results: undefined,
   setResults: (results: SearchOutput) => set({ results }),
-  query: "",
+  searchQuery: "",
   doSearch: (query: string) => {
-    if (query) set({ query });
+    if (query) set({ searchQuery: query });
   },
 }));
 
 export const SearchProvider = () => {
-  const { setResults, query } = useSearch();
+  const { setResults, searchQuery } = useSearch();
 
   const { data } = api.elastic.search.useQuery(
-    { query },
-    { enabled: Boolean(query) }
+    { query: searchQuery },
+    { enabled: Boolean(searchQuery) }
   );
 
   useEffect(() => {
