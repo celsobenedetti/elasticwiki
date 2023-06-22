@@ -77,6 +77,7 @@ const performanceMiddleware = t.middleware(async ({ next }) => {
   const endTime = performance.now();
   const elapsedTime = endTime - startTime;
 
+  // HACK: Open issue on tRPC regarding wrong type for MiddlewareResult
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   Object.assign(results.data, { elapsedTime });
