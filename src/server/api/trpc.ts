@@ -13,6 +13,7 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { elasticClient } from "@/server/elasticsearch";
+import { performance } from "perf_hooks";
 
 /**
  * 1. CONTEXT
@@ -70,6 +71,19 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
   },
 });
 
+const performanceMiddleware = t.middleware(async ({ next }) => {
+  const startTime = performance.now();
+  const results = await next();
+  const endTime = performance.now();
+  const elapsedTime = endTime - startTime;
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  Object.assign(results.data, { elapsedTime });
+
+  return results;
+});
+
 /**
  * 3. ROUTER & PROCEDURE (THE IMPORTANT BIT)
  *
@@ -91,4 +105,4 @@ export const createTRPCRouter = t.router;
  * guarantee that a user querying is authorized, but you can still access user session data if they
  * are logged in.
  */
-export const publicProcedure = t.procedure;
+export const publicProcedure = t.procedure.use(performanceMiddleware);
