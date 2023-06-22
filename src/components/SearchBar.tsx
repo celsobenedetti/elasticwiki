@@ -1,6 +1,14 @@
 import { useState } from "react";
+
 import { HeroIcon, SVGShapes } from "./HeroIcon";
 import { Input } from "./ui/input";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function SearchBar({
   query,
@@ -49,15 +57,24 @@ export default function SearchBar({
 
   function SearchIcon() {
     return (
-      <button
-        onClick={searchCallback}
-        className=" bottom-0 right-1 top-0 my-auto h-5 w-5 cursor-pointer border-l border-l-slate-200 pl-3 dark:border-l-slate-700"
-      >
-        <HeroIcon
-          shape={SVGShapes.magnifyingGlass}
-          className=" bottom-0 left-0 right-0 top-0 mx-auto my-auto h-5 w-5 cursor-pointer text-indigo-500"
-        />
-      </button>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger className="flex">
+            <div
+              onClick={searchCallback}
+              className="my-auto h-5 w-5 cursor-pointer border-l border-l-slate-200 pl-3 dark:border-l-slate-700"
+            >
+              <HeroIcon
+                shape={SVGShapes.magnifyingGlass}
+                className="h-5 w-5 cursor-pointer text-indigo-500"
+              />
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Search</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     );
   }
 
