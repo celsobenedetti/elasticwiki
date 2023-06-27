@@ -21,7 +21,7 @@ export default function Header() {
       <Logo />
 
       <div className="w-full">
-        <div className="flex w-full sm:w-3/5">{!isHome && <Search />}</div>
+        <div className="flex w-full sm:w-4/5">{!isHome && <Search />}</div>
       </div>
 
       <ThemeToggle />
@@ -76,8 +76,14 @@ export default function Header() {
 function Search() {
   const router = useRouter();
 
-  const { setSearchQuery } = useSearch();
+  const { searchQuery: storeSearchQuery, setSearchQuery } = useSearch();
   const [query, setQuery] = useState("");
+
+  useEffect(() => {
+    setQuery((query) =>
+      query !== storeSearchQuery ? storeSearchQuery : query
+    );
+  }, [storeSearchQuery]);
 
   const searchCallback = () => {
     if (!query) return;
@@ -92,13 +98,11 @@ function Search() {
   };
 
   return (
-    <>
-      <SearchBar
-        searchCallback={searchCallback}
-        query={query}
-        setQuery={setQuery}
-        alwaysShowIcons={true}
-      />
-    </>
+    <SearchBar
+      searchCallback={searchCallback}
+      query={query}
+      setQuery={setQuery}
+      alwaysShowIcons={true}
+    />
   );
 }

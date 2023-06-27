@@ -39,7 +39,7 @@ export default function SearchBar(props: Props) {
           }
         }}
         type="text"
-        className={`rounded-full pl-10 hover:shadow ${
+        className={`rounded-full pl-10 pr-20 hover:shadow  ${
           isActive ? "shadow hover:shadow-md" : ""
         }`}
       />
