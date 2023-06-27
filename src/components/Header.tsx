@@ -18,26 +18,37 @@ export default function Header() {
       className={`fixed top-0 z-40 flex h-header w-full items-center justify-between gap-12
         bg-background px-6 ${!isHome ? "drop-shadow-sm" : ""}`}
     >
-      {!isHome ? (
-        <button
-          onClick={() => {
-            router.push("/").catch(console.error);
-          }}
-          className="transition-all duration-200 ease-in-out hover:scale-105 hover:transform hover:opacity-80"
-        >
-          <Image
-            alt="T3 Logo"
-            src={theme == "light" ? "/t3-dark.svg" : "/t3-light.svg"}
-            width={50}
-            height={50}
-          />
-        </button>
-      ) : (
-        <div></div>
-      )}
+      <Logo />
+
       <div className="w-full">
         <div className="flex w-full sm:w-3/5">{!isHome && <Search />}</div>
       </div>
+
+      <ThemeToggle />
+    </header>
+  );
+
+  function Logo() {
+    if (isHome) return <> </>;
+
+    return (
+      <button
+        onClick={() => {
+          router.push("/").catch(console.error);
+        }}
+        className="transition-all duration-200 ease-in-out hover:scale-105 hover:transform hover:opacity-80"
+      >
+        <Image
+          alt="T3 Logo"
+          src={theme == "light" ? "/t3-dark.svg" : "/t3-light.svg"}
+          width={50}
+          height={50}
+        />
+      </button>
+    );
+  }
+  function ThemeToggle() {
+    return (
       <Button
         onClick={toggleTheme}
         variant="ghost"
@@ -48,8 +59,8 @@ export default function Header() {
           shape={theme == "light" ? "sun" : "moon"}
         />
       </Button>
-    </header>
-  );
+    );
+  }
 }
 
 function Search() {
@@ -76,7 +87,7 @@ function Search() {
         searchCallback={searchCallback}
         query={query}
         setQuery={setQuery}
-        showButton={true}
+        alwaysShowIcons={true}
       />
     </>
   );
