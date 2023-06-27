@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { HeroIcon, SVGShapes } from "./HeroIcon";
+import { HeroIcon } from "./HeroIcon";
 import { Input } from "./ui/input";
 
 import {
@@ -27,7 +27,7 @@ export default function SearchBar({
   return (
     <div className="relative w-full">
       <HeroIcon
-        shape={SVGShapes.magnifyingGlass}
+        shape="magnifyingGlass"
         className="absolute bottom-0 left-2 top-0 my-auto h-5 w-5 text-slate-400"
       />
       <Input
@@ -65,7 +65,7 @@ export default function SearchBar({
               className="my-auto h-5 w-5 cursor-pointer border-l border-l-slate-200 pl-3 dark:border-l-slate-700"
             >
               <HeroIcon
-                shape={SVGShapes.magnifyingGlass}
+                shape="magnifyingGlass"
                 className="h-5 w-5 cursor-pointer text-indigo-500"
               />
             </div>
@@ -82,7 +82,7 @@ export default function SearchBar({
     return (
       <button onClick={() => setQuery("")}>
         <HeroIcon
-          shape={SVGShapes.x}
+          shape="x"
           className=" bottom-0 right-2 top-0 my-auto h-5 w-5 text-slate-400"
         />
       </button>

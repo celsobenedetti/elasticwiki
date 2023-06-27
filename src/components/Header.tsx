@@ -1,6 +1,6 @@
 import { useTheme } from "@/store/theme";
 import { Button } from "./ui/button";
-import { HeroIcon, SVGShapes } from "./HeroIcon";
+import { HeroIcon } from "./HeroIcon";
 import { useRouter } from "next/router";
 import SearchBar from "./SearchBar";
 import { useState } from "react";
@@ -23,7 +23,7 @@ export default function Header() {
             router.push("/").catch(console.error);
           }}
         >
-          <HeroIcon shape={SVGShapes.home} className="h-10 w-10" />
+          <HeroIcon shape="home" className="h-10 w-10" />
         </button>
       )}
       <div className="w-full">
@@ -32,7 +32,7 @@ export default function Header() {
       <Button onClick={toggleTheme} variant="ghost" className="h-10 w-10">
         <HeroIcon
           className="absolute h-8 w-8"
-          shape={theme == "light" ? SVGShapes.sun : SVGShapes.moon}
+          shape={theme == "light" ? "sun" : "moon"}
         />
       </Button>
     </header>

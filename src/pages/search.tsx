@@ -13,7 +13,7 @@ import { SEARCH_RESULTS_SIZE, type WikiDocument } from "@/lib/search";
 
 import { Button } from "@/components/ui/button";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import { HeroIcon, SVGShapes } from "@/components/HeroIcon";
+import { HeroIcon } from "@/components/HeroIcon";
 
 export default function Search() {
   const router = useRouter();
@@ -133,10 +133,7 @@ export default function Search() {
           className="flex gap-3 rounded-full px-12 text-sm"
         >
           <p>More results</p>
-          <HeroIcon
-            className="h-5 w-5 text-slate-500"
-            shape={SVGShapes.chevronDown}
-          />
+          <HeroIcon shape="chevronDown" className="h-5 w-5 text-slate-500" />
         </Button>
       );
     return <div></div>;
