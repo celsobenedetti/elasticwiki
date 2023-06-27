@@ -14,6 +14,14 @@ import { SEARCH_RESULTS_SIZE, type WikiDocument } from "@/lib/search";
 import { Button } from "@/components/ui/button";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { HeroIcon } from "@/components/HeroIcon";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
 
 export default function Search() {
   const router = useRouter();
@@ -72,9 +80,9 @@ export default function Search() {
       <section className="my-4 flex flex-col items-center gap-6 px-4">
         <SearchMetadata />
 
-        {searchResults.map((document) => {
-          return <h1 key={document._id}>{document._source?.content}</h1>;
-        })}
+        {searchResults.map((document) => (
+          <SearchResult document={document} key={document._id} />
+        ))}
 
         <SearchFooterBar />
       </section>
@@ -138,6 +146,28 @@ export default function Search() {
       );
     return <div></div>;
   }
+}
+
+function SearchResult({ document }: { document: SearchHit<WikiDocument> }) {
+  const doc = document._source;
+  if (!doc) return <></>;
+
+  return (
+    <Card className="border-slate-100 dark:border-slate-900">
+      <a href={doc.url} target="#">
+        <CardHeader className="group">
+          <CardTitle className="text-indigo-500 group-hover:underline">
+            {doc.title}
+          </CardTitle>
+          <CardDescription className="text-xs">{doc.url}</CardDescription>
+        </CardHeader>
+      </a>
+      <CardContent>{doc.content}</CardContent>
+      <CardFooter>
+        <p>Card Footer</p>
+      </CardFooter>
+    </Card>
+  );
 }
 
 const SECOND = 1000;
