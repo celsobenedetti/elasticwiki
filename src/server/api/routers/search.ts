@@ -5,17 +5,10 @@ import {
   type AggregationsAggregate,
   type SearchResponse as ClientSearchResponse,
 } from "@elastic/elasticsearch/lib/api/types";
-
-interface Document {
-  title: string;
-  url: string;
-  content: string;
-  reading_time: number;
-  dt_creation: Date;
-}
+import { SEARCH_RESULTS_SIZE, type WikiDocument } from "@/lib/search";
 
 type DocumentResponse = ClientSearchResponse<
-  Document,
+  WikiDocument,
   Record<string, AggregationsAggregate>
 >;
 
@@ -31,9 +24,9 @@ export const searchRouter = createTRPCRouter({
   search: publicProcedure
     .input(z.object({ query: z.string() }))
     .query<SearchResponse>(async ({ ctx, input }) => {
-      const results = await ctx.elastic.search<Document>({
+      const results = await ctx.elastic.search<WikiDocument>({
         index: "wikipedia",
-        size: SIZE,
+        size: SEARCH_RESULTS_SIZE,
         query: {
           match: { content: input.query },
         },
@@ -51,10 +44,10 @@ export const searchRouter = createTRPCRouter({
     .query<InfiniteSearchResponse>(async ({ ctx, input }) => {
       const cursor = input.cursor ?? 1;
 
-      const results = await ctx.elastic.search<Document>({
+      const results = await ctx.elastic.search<WikiDocument>({
         index: "wikipedia",
-        size: SIZE,
-        from: SIZE * cursor,
+        size: SEARCH_RESULTS_SIZE,
+        from: SEARCH_RESULTS_SIZE * cursor,
         query: {
           match: { content: input.query },
         },
@@ -63,5 +56,3 @@ export const searchRouter = createTRPCRouter({
       return { ...results, nextCursor: cursor + 1 };
     }),
 });
-
-const SIZE = 10;
