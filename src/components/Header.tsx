@@ -1,9 +1,9 @@
 import { useTheme } from "@/store/theme";
 import { Button } from "./ui/button";
-import { HeroIcon } from "./HeroIcon";
+import { HeroIcon, type SVGShape } from "./HeroIcon";
 import { useRouter } from "next/router";
 import SearchBar from "./SearchBar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearch } from "@/store/search";
 import Image from "next/image";
 
@@ -29,6 +29,10 @@ export default function Header() {
   );
 
   function Logo() {
+    /* Runtime conditional rendering to prevent Next.js hydration mismatch. Needed for complying to user system theme preference */
+    const [filter, setFilter] = useState("");
+    useEffect(() => setFilter(theme == "dark" ? "invert" : ""), []);
+
     if (isHome) return <> </>;
 
     return (
@@ -40,14 +44,20 @@ export default function Header() {
       >
         <Image
           alt="T3 Logo"
-          src={theme == "light" ? "/t3-dark.svg" : "/t3-light.svg"}
+          src="/t3-dark.svg"
+          className={`${filter}`}
           width={50}
           height={50}
+          priority={false}
         />
       </button>
     );
   }
   function ThemeToggle() {
+    /* Runtime conditional rendering to prevent Next.js hydration mismatch. Needed for complying to user system theme preference */
+    const [icon, setIcon] = useState<SVGShape>("sun");
+    useEffect(() => setIcon(theme == "dark" ? "moon" : "sun"), []);
+
     return (
       <Button
         onClick={toggleTheme}
@@ -56,7 +66,7 @@ export default function Header() {
       >
         <HeroIcon
           className="absolute mx-auto my-auto h-8 w-8"
-          shape={theme == "light" ? "sun" : "moon"}
+          shape={`${icon}`}
         />
       </Button>
     );

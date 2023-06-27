@@ -5,7 +5,7 @@ import "@/styles/globals.css";
 import { api } from "@/lib/api";
 
 import Header from "@/components/Header";
-import { ThemeProvider } from "@/store/theme";
+import { ThemeHandler } from "@/store/theme";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
@@ -16,8 +16,9 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <ThemeHandler />
+
       <Header />
-      <ThemeProvider />
       <Component {...pageProps} />
     </>
   );

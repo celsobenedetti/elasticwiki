@@ -8,11 +8,13 @@ const SVGShapes = {
   chevronDown: "M19.5 8.25l-7.5 7.5-7.5-7.5",
 };
 
+export type SVGShape = keyof typeof SVGShapes;
+
 export const HeroIcon = ({
   shape,
   className,
 }: {
-  shape: keyof typeof SVGShapes;
+  shape: SVGShape;
   className?: string;
 }) => {
   return (
