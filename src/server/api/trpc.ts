@@ -14,6 +14,7 @@ import { ZodError } from "zod";
 
 import { elasticClient } from "@/server/elasticsearch";
 import { performance } from "perf_hooks";
+import { type SearchResponse } from "@elastic/elasticsearch/lib/api/types";
 
 /**
  * 1. CONTEXT
@@ -71,16 +72,21 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
   },
 });
 
-const performanceMiddleware = t.middleware(async ({ next }) => {
-  const startTime = performance.now();
-  const results = await next();
-  const endTime = performance.now();
-  const elapsedTime = endTime - startTime;
+type InferResolved<T> = T extends Promise<infer R> ? R : T;
 
-  // HACK: Open issue on tRPC regarding wrong type for MiddlewareResult
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  Object.assign(results.data, { elapsedTime });
+const elapsedTimeMiddleware = t.middleware(async ({ next }) => {
+  type ResultsPromise = ReturnType<typeof next>;
+  type ResolvedResults = InferResolved<ResultsPromise> & {
+    data: SearchResponse & { elapsedTime?: number };
+  };
+
+  const startTime = performance.now();
+  const results = (await next()) as ResolvedResults;
+  const endTime = performance.now();
+
+  if (results.data) {
+    results.data.elapsedTime = endTime - startTime;
+  }
 
   return results;
 });
@@ -106,4 +112,4 @@ export const createTRPCRouter = t.router;
  * guarantee that a user querying is authorized, but you can still access user session data if they
  * are logged in.
  */
-export const publicProcedure = t.procedure.use(performanceMiddleware);
+export const searchProcedure = t.procedure.use(elapsedTimeMiddleware);

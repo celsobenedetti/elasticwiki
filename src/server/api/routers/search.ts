@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { createTRPCRouter, searchProcedure } from "@/server/api/trpc";
 import {
   type AggregationsAggregate,
   type SearchResponse as ClientSearchResponse,
@@ -21,7 +21,7 @@ interface InfiniteSearchResponse extends SearchResponse {
 }
 
 export const searchRouter = createTRPCRouter({
-  search: publicProcedure
+  search: searchProcedure
     .input(z.object({ query: z.string() }))
     .query<SearchResponse>(async ({ ctx, input }) => {
       const results = await ctx.elastic.search<WikiDocument>({
@@ -34,7 +34,7 @@ export const searchRouter = createTRPCRouter({
       return results;
     }),
 
-  infiniteSearch: publicProcedure
+  infiniteSearch: searchProcedure
     .input(
       z.object({
         query: z.string(),
