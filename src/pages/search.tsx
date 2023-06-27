@@ -111,7 +111,7 @@ export default function Search() {
     return (
       <InView
         onChange={(inView) => {
-          if (inView && pagesFetchedCount <= 5) {
+          if (inView && pagesFetchedCount <= MAX_SCROLL_FETCH) {
             fetchNextPage().catch(console.error);
           }
         }}
@@ -131,7 +131,7 @@ export default function Search() {
         </div>
       );
     if (isFetchingNextPage) return <LoadingSpinner />;
-    if (props.pagesFetched > 5)
+    if (props.pagesFetched > MAX_SCROLL_FETCH)
       return (
         <Button
           onClick={() => {
@@ -171,3 +171,4 @@ function SearchResult({ document }: { document: SearchHit<WikiDocument> }) {
 }
 
 const SECOND = 1000;
+const MAX_SCROLL_FETCH = 3;
