@@ -1,9 +1,11 @@
 # T3 Document Finder App with Elasticsearch
 
 - [Next.js](https://nextjs.org)
-- [Tailwind CSS](https://tailwindcss.com)
 - [tRPC](https://trpc.io)
+- [Zustand](https://zustand-demo.pmnd.rs/)
 - [Elasticsearch JavaScript Client](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/index.html)
+- [Tailwind CSS](https://tailwindcss.com)
+- [shadcn/ui](https://ui.shadcn.com/)
 
 ## Elasticsearch TLS
 
@@ -26,5 +28,6 @@ The `ca.crt` certificate needs to be present in the root of the project for Elas
 ## Refs
 
 - [shadcn/ui — Theming Wrapped in a Tailwind Plugin/Preset](https://www.youtube.com/watch?v=QJlTWj30krw&t=10s)
+- [TanStack Query infinite scrolling](https://tanstack.com/query/v4/docs/react/examples/react/load-more-infinite-scroll)
 
 > This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
