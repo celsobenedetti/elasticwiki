@@ -42,17 +42,17 @@ export default function Header() {
 function Search() {
   const router = useRouter();
 
-  const { doSearch } = useSearch();
+  const { setSearchQuery } = useSearch();
   const [query, setQuery] = useState("");
 
   const searchCallback = () => {
     if (!query) return;
-    doSearch(query);
 
+    setSearchQuery(query);
     router
       .push({
         pathname: "/search",
-        query: query,
+        query: { query },
       })
       .catch(console.error);
   };

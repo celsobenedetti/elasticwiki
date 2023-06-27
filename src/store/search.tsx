@@ -8,14 +8,14 @@ interface SearchStore {
   results: SearchOutput;
   setResults: (results: SearchOutput) => void;
   searchQuery: string;
-  doSearch: (query: string) => void;
+  setSearchQuery: (query: string) => void;
 }
 
 export const useSearch = create<SearchStore>((set) => ({
   results: undefined,
   setResults: (results: SearchOutput) => set({ results }),
   searchQuery: "",
-  doSearch: (query: string) => {
+  setSearchQuery: (query: string) => {
     if (query) set({ searchQuery: query });
   },
 }));
