@@ -19,18 +19,3 @@ export const useSearch = create<SearchStore>((set) => ({
     if (query) set({ searchQuery: query });
   },
 }));
-
-export const SearchProvider = () => {
-  const { setResults, searchQuery } = useSearch();
-
-  const { data } = api.elastic.search.useQuery(
-    { query: searchQuery },
-    { enabled: Boolean(searchQuery) }
-  );
-
-  useEffect(() => {
-    setResults(data);
-  }, [data, setResults]);
-
-  return <></>;
-};

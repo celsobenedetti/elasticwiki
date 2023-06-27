@@ -6,7 +6,6 @@ import { api } from "@/lib/api";
 
 import Header from "@/components/Header";
 import { ThemeProvider } from "@/store/theme";
-import { SearchProvider } from "@/store/search";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
@@ -18,10 +17,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       </Head>
 
       <Header />
-
       <ThemeProvider />
-      <SearchProvider />
-
       <Component {...pageProps} />
     </>
   );
