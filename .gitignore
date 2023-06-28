@@ -36,6 +36,9 @@ yarn-error.log*
 .envrc
 .env*.local
 
+ca.key
+**/ca.key
+
 # vercel
 .vercel
 

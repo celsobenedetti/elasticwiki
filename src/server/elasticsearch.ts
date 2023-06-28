@@ -9,7 +9,7 @@ export const elasticClient = new Client({
     password: process.env.ELASTIC_PASSWORD || "",
   },
   tls: {
-    ca: readFileSync(`${cwd}/ca.crt`),
+    ca: readFileSync(`${cwd}/ca/ca.crt`),
   },
   node: process.env.ELASTIC_HOST,
 });

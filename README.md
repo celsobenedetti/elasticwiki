@@ -16,6 +16,7 @@ They can be copied from the container to the local FS
 ```bash
 docker cp elasticsearch-es01-1:/usr/share/elasticsearch/config/certs/ca .
 # ca/ca.crt  ca/ca.key
+curl --cert ca.crt --key ca.key -u $ELASTIC_USER:$ELASTIC_PASSWORD --cacert ca.crt https://localhost:9200
 ```
 
 The `ca.crt` certificate needs to be present in the root of the project for Elasticsearch JavaScript client to authenticate
@@ -29,5 +30,6 @@ The `ca.crt` certificate needs to be present in the root of the project for Elas
 
 - [shadcn/ui — Theming Wrapped in a Tailwind Plugin/Preset](https://www.youtube.com/watch?v=QJlTWj30krw&t=10s)
 - [TanStack Query infinite scrolling](https://tanstack.com/query/v4/docs/react/examples/react/load-more-infinite-scroll)
+- [Elasticsearch Term Suggester](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesters.html#term-suggester)
 
 > This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
