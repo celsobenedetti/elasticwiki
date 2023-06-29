@@ -17,8 +17,8 @@ index:
 
 # delete index
 delete-index endpoint="wikipedia":
-    curl -XDELETE --cacert ca/ca.crt --cert ca/ca.crt --key ca/ca.key -u $ELASTIC_USER:$ELASTIC_PASSWORD $ELASTIC_HOST/{{ endpoint }}
+    curl -XDELETE --cacert ca/ca.crt -u $ELASTIC_USER:$ELASTIC_PASSWORD $ELASTIC_HOST/{{ endpoint }}
 
 # curl index
 get endpoint="wikipedia":
-    curl --cacert ca/ca.crt --cert ca/ca.crt --key ca/ca.key -u $ELASTIC_USER:$ELASTIC_PASSWORD $ELASTIC_HOST/{{ endpoint }}?pretty=true
+    curl --cacert ca/ca.crt -u $ELASTIC_USER:$ELASTIC_PASSWORD $ELASTIC_HOST/{{ endpoint }}?pretty=true
