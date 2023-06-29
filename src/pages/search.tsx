@@ -20,7 +20,6 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-  CardFooter,
 } from "@/components/ui/card";
 
 export default function Search() {
@@ -33,7 +32,7 @@ export default function Search() {
       {
         initialCursor: 0,
         getNextPageParam: (lastPage) => {
-          if (lastPage.hits.hits.length < SEARCH_RESULTS_SIZE) {
+          if (lastPage.docs.length < SEARCH_RESULTS_SIZE) {
             return undefined; // no more results
           }
           return lastPage.nextCursor;
@@ -61,8 +60,8 @@ export default function Search() {
   const searchResults = [] as SearchHit<WikiDocument>[];
 
   for (const page of data.pages) {
-    searchResults.push(...page.hits.hits);
-    elapsedTimeMS += page.elapsedTime || 0;
+    searchResults.push(...page.docs);
+    elapsedTimeMS += data.pages[0]?.elapsedTime || 0;
   }
 
   if (searchResults.length === 0) {
@@ -90,7 +89,7 @@ export default function Search() {
   );
 
   function SearchMetadata() {
-    const totalResults = data?.pages[0]?.hits.total as SearchTotalHits;
+    const totalResults = data?.pages[0]?.total as SearchTotalHits;
     const numberOfResults = totalResults?.value || 0;
     const elapsedTime = (elapsedTimeMS / SECOND).toFixed(3);
 
@@ -163,9 +162,9 @@ function SearchResult({ document }: { document: SearchHit<WikiDocument> }) {
         </CardHeader>
       </a>
       <CardContent>{doc.content}</CardContent>
-      <CardFooter>
-        <p>Card Footer</p>
-      </CardFooter>
+      {/* <CardFooter> */}
+      {/*   <p>Card Footer</p> */}
+      {/* </CardFooter> */}
     </Card>
   );
 }

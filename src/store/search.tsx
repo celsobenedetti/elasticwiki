@@ -1,5 +1,4 @@
-import { type RouterOutputs, api } from "@/lib/api";
-import { useEffect } from "react";
+import { type RouterOutputs } from "@/lib/api";
 import { create } from "zustand";
 
 type SearchOutput = RouterOutputs["elastic"]["search"] | undefined;

@@ -3,11 +3,11 @@ import { z } from "zod";
 import { createTRPCRouter, searchProcedure } from "@/server/api/trpc";
 import {
   type AggregationsAggregate,
-  type SearchResponse as ClientSearchResponse,
+  type SearchResponse as ElasticSearchResponse,
 } from "@elastic/elasticsearch/lib/api/types";
-import { SEARCH_RESULTS_SIZE, type WikiDocument } from "@/lib/search";
+import { INDEX, SEARCH_RESULTS_SIZE, type WikiDocument } from "@/lib/search";
 
-type DocumentResponse = ClientSearchResponse<
+type DocumentResponse = ElasticSearchResponse<
   WikiDocument,
   Record<string, AggregationsAggregate>
 >;
@@ -21,19 +21,6 @@ interface InfiniteSearchResponse extends SearchResponse {
 }
 
 export const searchRouter = createTRPCRouter({
-  search: searchProcedure
-    .input(z.object({ query: z.string() }))
-    .query<SearchResponse>(async ({ ctx, input }) => {
-      const results = await ctx.elastic.search<WikiDocument>({
-        index: "wikipedia",
-        size: SEARCH_RESULTS_SIZE,
-        query: {
-          match: { content: input.query },
-        },
-      });
-      return results;
-    }),
-
   infiniteSearch: searchProcedure
     .input(
       z.object({
@@ -41,18 +28,30 @@ export const searchRouter = createTRPCRouter({
         cursor: z.number().nullish(), // <-- "cursor" needs to exist, but can be any type
       })
     )
-    .query<InfiniteSearchResponse>(async ({ ctx, input }) => {
+    .query(async ({ ctx, input }) => {
       const cursor = input.cursor ?? 1;
 
       const results = await ctx.elastic.search<WikiDocument>({
-        index: "wikipedia",
+        index: INDEX,
         size: SEARCH_RESULTS_SIZE,
         from: SEARCH_RESULTS_SIZE * cursor,
         query: {
           match: { content: input.query },
         },
+        aggs: {
+          keywords: {
+            significant_text: {
+              field: "content",
+            },
+          },
+        },
       });
 
-      return { ...results, nextCursor: cursor + 1 };
+      return {
+        total: results.hits.total,
+        elapsedTime: ctx.elapsedTime,
+        nextCursor: cursor + 1,
+        docs: [...results.hits.hits],
+      };
     }),
 });

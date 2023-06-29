@@ -7,3 +7,4 @@ export interface WikiDocument {
 }
 
 export const SEARCH_RESULTS_SIZE = 10;
+export const INDEX = "wikipedia";
