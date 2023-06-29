@@ -81,14 +81,14 @@ const elapsedTimeMiddleware = t.middleware(async ({ next }) => {
   };
 
   const startTime = performance.now();
-  const results = (await next()) as ResolvedResults;
+  (await next()) as ResolvedResults;
   const endTime = performance.now();
 
-  if (results.data) {
-    results.data.elapsedTime = endTime - startTime;
-  }
-
-  return results;
+  return next({
+    ctx: {
+      elapsedTime: endTime - startTime,
+    },
+  });
 });
 
 /**
