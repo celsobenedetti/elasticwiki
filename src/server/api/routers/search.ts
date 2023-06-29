@@ -1,24 +1,8 @@
+import { performance } from "perf_hooks";
 import { z } from "zod";
 
-import { createTRPCRouter, searchProcedure } from "@/server/api/trpc";
-import {
-  type AggregationsAggregate,
-  type SearchResponse as ElasticSearchResponse,
-} from "@elastic/elasticsearch/lib/api/types";
 import { INDEX, SEARCH_RESULTS_SIZE, type WikiDocument } from "@/lib/search";
-
-type DocumentResponse = ElasticSearchResponse<
-  WikiDocument,
-  Record<string, AggregationsAggregate>
->;
-
-interface SearchResponse extends DocumentResponse {
-  elapsedTime?: number;
-}
-
-interface InfiniteSearchResponse extends SearchResponse {
-  nextCursor: number;
-}
+import { createTRPCRouter, searchProcedure } from "@/server/api/trpc";
 
 export const searchRouter = createTRPCRouter({
   infiniteSearch: searchProcedure
@@ -30,6 +14,7 @@ export const searchRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const cursor = input.cursor ?? 1;
+      const startTime = performance.now();
 
       const results = await ctx.elastic.search<WikiDocument>({
         index: INDEX,
@@ -46,10 +31,11 @@ export const searchRouter = createTRPCRouter({
           },
         },
       });
+      const endTime = performance.now();
 
       return {
+        elapsedTime: endTime - startTime,
         total: results.hits.total,
-        elapsedTime: ctx.elapsedTime,
         nextCursor: cursor + 1,
         docs: [...results.hits.hits],
       };

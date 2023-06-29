@@ -13,8 +13,6 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { elasticClient } from "@/server/elasticsearch";
-import { performance } from "perf_hooks";
-import { type SearchResponse } from "@elastic/elasticsearch/lib/api/types";
 
 /**
  * 1. CONTEXT
@@ -72,25 +70,6 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
   },
 });
 
-type InferResolved<T> = T extends Promise<infer R> ? R : T;
-
-const elapsedTimeMiddleware = t.middleware(async ({ next }) => {
-  type ResultsPromise = ReturnType<typeof next>;
-  type ResolvedResults = InferResolved<ResultsPromise> & {
-    data: SearchResponse & { elapsedTime?: number };
-  };
-
-  const startTime = performance.now();
-  (await next()) as ResolvedResults;
-  const endTime = performance.now();
-
-  return next({
-    ctx: {
-      elapsedTime: endTime - startTime,
-    },
-  });
-});
-
 /**
  * 3. ROUTER & PROCEDURE (THE IMPORTANT BIT)
  *
@@ -112,4 +91,4 @@ export const createTRPCRouter = t.router;
  * guarantee that a user querying is authorized, but you can still access user session data if they
  * are logged in.
  */
-export const searchProcedure = t.procedure.use(elapsedTimeMiddleware);
+export const searchProcedure = t.procedure;
