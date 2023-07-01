@@ -12,14 +12,15 @@ start_time = time.time()
 user = os.environ.get("ELASTIC_USER") or ""
 password = os.environ.get("ELASTIC_PASSWORD") or ""
 hosts = os.environ.get("ELASTIC_HOST")
+cert = os.environ.get("ELASTIC_CERT") or ""
 
-if "" in [user, password, hosts]:
-    print("Env: ELASTIC_USER, ELASTIC_PASSWORD and ELASTIC_HOST required")
+if "" in [user, password, hosts, cert]:
+    print("Env: ELASTIC_USER, ELASTIC_PASSWORD, ELASTIC_HOST, ELASTIC_CERT required")
     exit(1)
 
 
 # Create an Elasticsearch client
-elastic = Elasticsearch(ca_certs="ca/ca.crt", basic_auth=(user, password), hosts=hosts)
+elastic = Elasticsearch(ca_certs=cert, basic_auth=(user, password), hosts=hosts)
 
 INDEX = "wikipedia"
 BATCH_SIZE = 1000

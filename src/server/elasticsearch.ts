@@ -1,7 +1,4 @@
 import { Client } from "@elastic/elasticsearch";
-import { readFileSync } from "fs";
-
-const cwd = process.cwd();
 
 export const elasticClient = new Client({
   auth: {
@@ -9,7 +6,7 @@ export const elasticClient = new Client({
     password: process.env.ELASTIC_PASSWORD || "",
   },
   tls: {
-    ca: readFileSync(`${cwd}/ca/ca.crt`),
+    ca: process.env.ELASTIC_CERT,
   },
   node: process.env.ELASTIC_HOST,
 });

@@ -1,5 +1,5 @@
 # github.com/casey/just
-alias e := elastic-up
+alias eu := elastic-up
 alias ed := elastic-down
 alias di := delete-index
 

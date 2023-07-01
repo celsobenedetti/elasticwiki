@@ -37,10 +37,15 @@ yarn-error.log*
 .env*.local
 
 ca.key
-**/ca.key
+**/ca.*
+certs
 
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
+
+# terraform
+**/.terraform*
+terraform.*

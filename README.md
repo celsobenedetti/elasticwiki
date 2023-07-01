@@ -9,19 +9,35 @@
 
 ## Elasticsearch TLS
 
-The `elastic-cluster.yml` has TLS security enabled by default. It creates certificates that need to be used for Elasticsearch JavaScript Client authentication.
+The `elastic-cluster.yml` has TLS enabled by default, all https communication must be authenticated
 
-They can be copied from the container to the local FS
+It creates certificates authorizing the `$ELASTIC_HOST_IP` to make https requests, to the cluster
+
+The certificate is required for all connections to the cluster, including the Elasticsearch JavaScript Client used in the app.
+
+It can be copied from the container to the local FS
 
 ```bash
-docker cp elasticsearch-es01-1:/usr/share/elasticsearch/config/certs/ca .
-# ca/ca.crt  ca/ca.key
-curl --cert ca.crt --key ca.key -u $ELASTIC_USER:$ELASTIC_PASSWORD --cacert ca.crt https://localhost:9200
+docker cp elasticsearch-es01-1:/usr/share/elasticsearch/config/certs/ca/ca.crt .
+curl --cacert ca.crt -u $ELASTIC_USER:$ELASTIC_PASSWORD $ELASTIC_HOST
 ```
 
-The `ca.crt` certificate needs to be present in the root of the project for Elasticsearch JavaScript client to authenticate
+The `ca.crt` is exported as the `$ELASTIC_CERT` variable to be consumed on the app and the python client on `build_index.py`
 
 ## Notes
+
+### Direnv
+
+[direnv](https://github.com/direnv/direnv) is an awesome tool for managing project specific environment variables
+
+```bash
+# cool examples
+export ELASTIC_HOST=https://localhost:9200
+export ELASTIC_CERT=$(cat ./certs/ca.crt)
+export TF_VAR_linode_pass=pass
+export TF_VAR_linode_tk=$LINODE_TOKEN
+export TF_VAR_ssh_key=$(cat ~/.ssh/my_key.pub)
+```
 
 - [Note: Elasticsearch Javascrip Client](./docs/elasticsearch-js.md)
 - [Note: tRPC](./docs/trpc.md)
