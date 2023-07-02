@@ -20,6 +20,7 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
+  CardFooter,
 } from "@/components/ui/card";
 
 export default function Search() {
@@ -148,8 +149,10 @@ export default function Search() {
 }
 
 function SearchResult({ document }: { document: SearchHit<WikiDocument> }) {
-  const doc = document._source;
-  if (!doc) return <></>;
+  const { _source: doc, highlight } = document;
+  if (!doc || !highlight || !highlight.content) return <></>;
+
+  const { dt_creation: createdAt, reading_time } = doc;
 
   return (
     <Card className="border-slate-100 dark:border-slate-900">
@@ -161,10 +164,19 @@ function SearchResult({ document }: { document: SearchHit<WikiDocument> }) {
           <CardDescription className="text-xs">{doc.url}</CardDescription>
         </CardHeader>
       </a>
-      <CardContent>{doc.content}</CardContent>
-      {/* <CardFooter> */}
-      {/*   <p>Card Footer</p> */}
-      {/* </CardFooter> */}
+      <CardContent
+        className="search-highlights"
+        dangerouslySetInnerHTML={{ __html: highlight.content }}
+      />
+      <CardFooter className="justify-between gap-2 pr-8 text-slate-500">
+        <p className="text-sm">{reading_time} min read</p>
+        {createdAt && (
+          <p className="text-xs">
+            {/* HACK: strip weekday from date formatting */}
+            {new Date(createdAt).toDateString().slice(4)}
+          </p>
+        )}
+      </CardFooter>
     </Card>
   );
 }

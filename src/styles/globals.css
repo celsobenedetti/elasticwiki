@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .search-highlights > em {
+    /* search jesults highlight tags */
+    @apply rounded bg-indigo-100  px-[2px] not-italic dark:bg-indigo-900;
+  }
+}

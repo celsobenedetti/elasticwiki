@@ -14,30 +14,39 @@ export const searchRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const cursor = input.cursor ?? 1;
-      const startTime = performance.now();
 
+      const startTime = performance.now();
       const results = await ctx.elastic.search<WikiDocument>({
         index: INDEX,
         size: SEARCH_RESULTS_SIZE,
         from: SEARCH_RESULTS_SIZE * cursor,
+        _source_excludes: "content_unstemmed",
         query: {
           match: { content: input.query },
         },
         aggs: {
           keywords: {
             significant_text: {
-              field: "content",
+              field: "content_unstemmed",
+            },
+          },
+        },
+
+        highlight: {
+          fields: {
+            content: {
+              number_of_fragments: 0,
             },
           },
         },
       });
-      const endTime = performance.now();
 
       return {
-        elapsedTime: endTime - startTime,
+        agg: results.aggregations,
+        elapsedTime: performance.now() - startTime,
         total: results.hits.total,
         nextCursor: cursor + 1,
-        docs: [...results.hits.hits],
+        docs: results.hits.hits,
       };
     }),
 });
