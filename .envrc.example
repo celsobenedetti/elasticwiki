@@ -1,0 +1,31 @@
+export ES_PORT=9200
+export ELASTIC_HOST=https://localhost:$ES_PORT
+export ELASTIC_USER=user
+export ELASTIC_PASSWORD=pass
+export ELASTIC_CERT=$(cat ./certs/ca.crt)
+
+# Password for the 'kibana_system' user (at least 6 characters)
+export KIBANA_PASSWORD=Elastic123456!
+
+# Version of Elastic products
+export STACK_VERSION=8.7.0
+
+# Set the cluster name
+export CLUSTER_NAME=docker-cluster
+
+# Set to 'basic' or 'trial' to automatically start the 30-day trial
+export LICENSE=basic
+
+# Port to expose Kibana to the host
+export KIBANA_PORT=5601
+
+# Increase or decrease based on the available host memory (in bytes)
+export MEM_LIMIT=1073741824
+
+# Terraform vars
+export TF_VAR_linode_tk=$LINODE_TOKEN
+export TF_VAR_linode_user=user
+export TF_VAR_linode_pass=pass
+export TF_VAR_ssh_key=$(cat ~/.ssh/key.pub)
+export TF_VAR_elastic_dir=dir
+export TF_VAR_elastic_port=$ES_PORT

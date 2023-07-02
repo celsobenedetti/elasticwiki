@@ -8,6 +8,10 @@ export const env = createEnv({
    */
   server: {
     NODE_ENV: z.enum(["development", "test", "production"]),
+    ELASTIC_USER: z.string(),
+    ELASTIC_PASSWORD: z.string(),
+    ELASTIC_HOST: z.string(),
+    ELASTIC_CERT: z.string(),
   },
 
   /**
@@ -25,6 +29,10 @@ export const env = createEnv({
    */
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
+    ELASTIC_HOST: process.env.ELASTIC_HOST,
+    ELASTIC_USER: process.env.ELASTIC_USER,
+    ELASTIC_PASSWORD: process.env.ELASTIC_PASSWORD,
+    ELASTIC_CERT: process.env.ELASTIC_CERT,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**
