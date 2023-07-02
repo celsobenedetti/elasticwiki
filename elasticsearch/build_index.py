@@ -22,6 +22,10 @@ def setupArgParser():
     """,
     )
     parser.add_argument("--cert", type=str, help="Path to the certificate file.")
+    parser.add_argument("--host", type=str, help="Elasticsearch https host URL")
+    parser.add_argument(
+        "--es-dir", type=str, help="Elasticsearch directory with index files"
+    )
     return parser.parse_args()
 
 
@@ -32,6 +36,7 @@ user = os.environ.get("ELASTIC_USER") or ""
 password = os.environ.get("ELASTIC_PASSWORD") or ""
 host = os.environ.get("ELASTIC_HOST") or ""
 ca_cert = os.environ.get("ELASTIC_CERT") or ""
+es_dir = args.es_dir or "elasticsearch"
 
 
 def getCertFile():
@@ -47,6 +52,7 @@ def getCertFile():
 
 
 cert_file = getCertFile()
+host = args.host or host
 
 elastic_vars = [user, password, host, cert_file]
 missing_envs = [env[1] for env in zip(elastic_vars, required_envs) if env[0] == ""]
@@ -69,13 +75,13 @@ def run():
 
 
 def create_index():
-    with open("elasticsearch/wikipedia_mapping.json") as json_mapping:
+    with open(es_dir + "/wikipedia_mapping.json") as json_mapping:
         mapping = json.load(json_mapping)
         client.indices.create(index=INDEX, body=mapping)
 
 
 def bulk_index():
-    with open("elasticsearch/wiki.json") as json_bulk:
+    with open(es_dir + "/wiki.json") as json_bulk:
         lines = json_bulk.readlines()
 
         bulk = []

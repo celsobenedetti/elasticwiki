@@ -18,3 +18,7 @@ variable "elastic_dir" {
   type        = string
   description = "location inside VM where the elasticsearch cluster compose file will be placed"
 }
+
+variable "elastic_port" {
+  type = string
+}

@@ -65,4 +65,14 @@ resource "linode_instance" "t3-elasticsearch" {
   provisioner "local-exec" {
     command = "scp -o StrictHostKeyChecking=no -r ${var.linode_user}@${tolist(linode_instance.t3-elasticsearch.ipv4)[0]}:/${var.elastic_dir}/ca.crt ."
   }
+
+  # build elasticsearch index
+  provisioner "local-exec" {
+    command = <<EOT
+    python3 ../elasticsearch/build_index.py \
+            --cert ca.crt \
+            --host https://${tolist(linode_instance.t3-elasticsearch.ipv4)[0]}:${var.elastic_port} \
+            --es-dir "../elasticsearch" \
+    EOT
+  }
 }
