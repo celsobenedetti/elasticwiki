@@ -13,12 +13,12 @@ elastic-down:
 
 # create index with mapping and bulk ingest wiki.json
 index:
-    python3 elasticsearch/build_index.py
+    python3 elasticsearch/build_index.py --cert certs/ca.crt
 
 # delete index
 delete-index endpoint="wikipedia":
-    curl -XDELETE --cacert ca/ca.crt -u $ELASTIC_USER:$ELASTIC_PASSWORD $ELASTIC_HOST/{{ endpoint }}
+    curl -XDELETE --cacert certs/ca.crt -u $ELASTIC_USER:$ELASTIC_PASSWORD $ELASTIC_HOST/{{ endpoint }}
 
 # curl index
 get endpoint="wikipedia":
-    curl --cacert ca/ca.crt -u $ELASTIC_USER:$ELASTIC_PASSWORD $ELASTIC_HOST/{{ endpoint }}?pretty=true
+    curl --cacert certs/ca.crt -u $ELASTIC_USER:$ELASTIC_PASSWORD $ELASTIC_HOST/{{ endpoint }}?pretty=true
