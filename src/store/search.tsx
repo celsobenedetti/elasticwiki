@@ -1,7 +1,7 @@
 import { type RouterOutputs } from "@/lib/api";
 import { create } from "zustand";
 
-type SearchOutput = RouterOutputs["elastic"]["search"] | undefined;
+type SearchOutput = RouterOutputs["elastic"]["infiniteSearch"] | undefined;
 
 interface SearchStore {
   results: SearchOutput;
