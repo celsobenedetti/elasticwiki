@@ -52,5 +52,6 @@ export TF_VAR_ssh_key=$(cat ~/.ssh/my_key.pub)
 - [Elasticsearch Term Suggester](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesters.html#term-suggester)
 - [Use Terraform to Provision Linode Environments ](https://www.linode.com/docs/guides/how-to-build-your-infrastructure-using-terraform-and-linode/)
 - [Python Elasticsearch Client](https://elasticsearch-py.readthedocs.io/en/v7.10.1/)
+- [Linode: How do I check memory usage?](https://www.linode.com/community/questions/18654/how-do-i-check-memory-usage)
 
 > This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.

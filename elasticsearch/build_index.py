@@ -75,9 +75,13 @@ def run():
 
 
 def create_index():
+    # print current python working directory
+    print("Current working directory: " + os.getcwd())
     with open(es_dir + "/wikipedia_mapping.json") as json_mapping:
-        mapping = json.load(json_mapping)
-        client.indices.create(index=INDEX, body=mapping)
+        index = json.load(json_mapping)
+        settings = index["settings"]
+        mappings = index["mappings"]
+        client.indices.create(index=INDEX, mappings=mappings, settings=settings)
 
 
 def bulk_index():
