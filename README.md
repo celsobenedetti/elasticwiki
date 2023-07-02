@@ -11,7 +11,7 @@
 
 The `elastic-cluster.yml` has TLS enabled by default, all https communication must be authenticated
 
-It creates certificates authorizing the `$ELASTIC_HOST_IP` to make https requests, to the cluster
+It creates certificates authorizing `$ELASTIC_HOST_IP` as a valid ip to make https requests to
 
 The certificate is required for all connections to the cluster, including the Elasticsearch JavaScript Client used in the app.
 
@@ -19,12 +19,17 @@ It can be copied from the container to the local FS
 
 ```bash
 docker cp elasticsearch-es01-1:/usr/share/elasticsearch/config/certs/ca/ca.crt .
+# communicate to Elasticsearch
 curl --cacert ca.crt -u $ELASTIC_USER:$ELASTIC_PASSWORD $ELASTIC_HOST
 ```
 
 The `ca.crt` is exported as the `$ELASTIC_CERT` variable to be consumed on the app and the python client on `build_index.py`
 
 ## Notes
+
+- [Elasticsearch Javascrip Client](./docs/elasticsearch-js.md)
+- [tRPC](./docs/trpc.md)
+- [Terraform](./terraform/README.md)
 
 ### Direnv
 
@@ -39,13 +44,13 @@ export TF_VAR_linode_tk=$LINODE_TOKEN
 export TF_VAR_ssh_key=$(cat ~/.ssh/my_key.pub)
 ```
 
-- [Note: Elasticsearch Javascrip Client](./docs/elasticsearch-js.md)
-- [Note: tRPC](./docs/trpc.md)
-
 ## Refs
 
 - [shadcn/ui — Theming Wrapped in a Tailwind Plugin/Preset](https://www.youtube.com/watch?v=QJlTWj30krw&t=10s)
 - [TanStack Query infinite scrolling](https://tanstack.com/query/v4/docs/react/examples/react/load-more-infinite-scroll)
+- [Elasticsearch with Docker](https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html)
 - [Elasticsearch Term Suggester](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesters.html#term-suggester)
+- [Use Terraform to Provision Linode Environments ](https://www.linode.com/docs/guides/how-to-build-your-infrastructure-using-terraform-and-linode/)
+- [Python Elasticsearch Client](https://elasticsearch-py.readthedocs.io/en/v7.10.1/)
 
 > This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
