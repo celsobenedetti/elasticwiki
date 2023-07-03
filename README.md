@@ -27,7 +27,7 @@ The `ca.crt` is exported as the `$ELASTIC_CERT` variable to be consumed on the a
 
 ## Notes
 
-- [Elasticsearch Javascrip Client](./docs/elasticsearch-js.md)
+- [Elasticsearch](./docs/elasticsearch.md)
 - [tRPC](./docs/trpc.md)
 - [Terraform](./terraform/README.md)
 

@@ -30,14 +30,34 @@ It is always recommended for cluster authentication to be enabled
 
 This can be done through custom TLS certificates, or issued API keys, as well as user credentials
 
-## X-Opaque-Id
+## Highlights
 
-This is an Elasticsearch feature to attach a header to every request to identify the client making the request
+The highlights feature in Elasticsearch allows for queries to return identifiers for the matches in the document fields
 
-This header is used to track requests across the cluster
+It returns _fragments_ containing the section of the document containing matches with the search query
+
+By default, the matches are wrapped in a `<em></em>` tag. This is used for rendering highlights on the frontend result
+
+Return the highlights for "content" field:
+
+```javascript
+{
+    // ...
+    highlight: {
+        fields: {
+            content: {
+                number_of_fragments: 0,
+            },
+        },
+    }
+}
+```
+
+Setting `number_of_fragments=0` returns the "content" text undivided
 
 ## Refs
 
 - [Docs: Elasticsearch JavaScript Client](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api)
+- [Docs: Elasticsearch highlighting](https://www.elastic.co/guide/en/elasticsearch/reference/current/highlighting.html#highlighting)
 
 2023-06-07

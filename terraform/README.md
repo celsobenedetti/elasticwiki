@@ -29,3 +29,7 @@ curl https://api.linode.com/v4/regions | jq
 curl https://api.linode.com/v4/linode/types/ | jq
 curl https://api.linode.com/v4/images/ | jq
 ```
+
+## Refs
+
+- [Use Terraform to Provision Linode Environments ](https://www.linode.com/docs/guides/how-to-build-your-infrastructure-using-terraform-and-linode/)
