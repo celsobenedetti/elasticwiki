@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import DOMPurify from "isomorphic-dompurify";
 
 import {
@@ -12,8 +12,9 @@ import { api } from "@/lib/api";
 import { useSearch } from "@/store/search";
 import {
   SEARCH_RESULTS_SIZE,
-  type SuggestionsAgg as KeywordsAgg,
+  type KeywordsAgg,
   type WikiDocument,
+  type DidYouMeanSuggestion,
 } from "@/lib/search";
 
 import { Button } from "@/components/ui/button";
@@ -46,13 +47,21 @@ export default function Search() {
       }
     );
 
+  const searchCallback = useCallback(
+    (query: string) => {
+      if (!query.length) return;
+      setSearchQuery(query);
+      router.query = { query: query };
+    },
+    [router, setSearchQuery]
+  );
+
   useEffect(() => {
     const queryParam = (router.query["query"] || "") as string;
     if (queryParam != searchQuery) {
-      setSearchQuery(queryParam);
-      router.query = { query: queryParam };
+      searchCallback(queryParam);
     }
-  }, [searchQuery, setSearchQuery, router]);
+  }, [searchQuery, searchCallback, router]);
 
   if (!data) {
     return (
@@ -70,28 +79,45 @@ export default function Search() {
     elapsedTimeMS += data.pages[0]?.elapsedTime || 0;
   }
 
+  const phraseSuggestion = data.pages[0]?.suggest;
+
   if (searchResults.length === 0) {
     return (
-      <main className="mx-auto flex h-screen items-center justify-center pb-2 pt-header sm:w-10/12">
-        No results to show
+      <main className="bg-blue mx-auto flex h-screen flex-col items-center  pb-2 pt-header sm:w-10/12">
+        <div className="m-1 h-1/2 self-start">
+          {phraseSuggestion?.hasSuggestionOustideQuery && (
+            <DidYouMean
+              suggestion={phraseSuggestion}
+              searchCallback={searchCallback}
+            />
+          )}
+        </div>
+        <h1>No results to show</h1>
       </main>
     );
   }
-
-  const suggestionsAgg = data.pages[0]?.aggs?.suggestions as KeywordsAgg;
-  const suggestions = (suggestionsAgg?.buckets || [])
+  const keywordsAgg = data.pages[0]?.aggs?.suggestions as KeywordsAgg;
+  const keywords = (keywordsAgg?.buckets || [])
     .map((suggestion) => suggestion.key)
     .filter((word) => !searchQuery.includes(word) && word.length > 3);
-
-  console.log({ searchResults, data, suggestions });
 
   return (
     <main className="mx-auto pb-2 pt-header sm:w-10/12">
       <section className="my-4 flex flex-col items-center gap-6 px-4">
         <SearchMetadata />
 
-        {suggestions.length > 0 && (
-          <TermSuggestions suggestions={suggestions} />
+        {phraseSuggestion?.hasSuggestionOustideQuery && (
+          <DidYouMean
+            suggestion={phraseSuggestion}
+            searchCallback={searchCallback}
+          />
+        )}
+
+        {keywords.length > 0 && (
+          <TermSuggestions
+            suggestions={keywords}
+            searchCallback={searchCallback}
+          />
         )}
 
         {searchResults.map((document) => (
@@ -162,9 +188,35 @@ export default function Search() {
   }
 }
 
-function TermSuggestions(props: { suggestions: string[] }): React.ReactNode {
-  const router = useRouter();
-  const { searchQuery, setSearchQuery } = useSearch();
+function DidYouMean(props: {
+  suggestion: DidYouMeanSuggestion;
+  searchCallback: (query: string) => void;
+}) {
+  return (
+    <a
+      className="group cursor-pointer self-start text-sm text-slate-600"
+      onClick={() => {
+        if (props.suggestion.text) {
+          props.searchCallback(props.suggestion.text);
+        }
+      }}
+    >
+      Did you mean:{" "}
+      <span
+        className="suggestion-highlight group-hover:text-indigo-500 group-hover:underline"
+        dangerouslySetInnerHTML={{
+          __html: DOMPurify.sanitize(props.suggestion.highlighted || ""),
+        }}
+      />
+    </a>
+  );
+}
+
+function TermSuggestions(props: {
+  suggestions: string[];
+  searchCallback: (query: string) => void;
+}): React.ReactNode {
+  const { searchQuery } = useSearch();
 
   return (
     <div className="flex w-full gap-1 overflow-x-auto rounded-3xl py-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-100">
@@ -176,8 +228,7 @@ function TermSuggestions(props: { suggestions: string[] }): React.ReactNode {
           key={term}
           onClick={() => {
             const newQuery = searchQuery + " " + term;
-            router.query = { query: newQuery };
-            setSearchQuery(newQuery);
+            props.searchCallback(newQuery);
           }}
         >
           {term}

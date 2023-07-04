@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { INDEX, SEARCH_RESULTS_SIZE, type WikiDocument } from "@/lib/search";
 import { createTRPCRouter, searchProcedure } from "@/server/api/trpc";
+import { type SearchTermSuggestOption } from "@elastic/elasticsearch/lib/api/types";
 
 export const searchRouter = createTRPCRouter({
   infiniteSearch: searchProcedure
@@ -39,9 +40,50 @@ export const searchRouter = createTRPCRouter({
             },
           },
         },
+
+        suggest: {
+          text: input.query,
+          phrase_suggester: {
+            phrase: {
+              field: "content_unstemmed.shingle",
+              confidence: 1,
+              size: 1,
+              max_errors: 2,
+              highlight: {
+                pre_tag: "<bold>",
+                post_tag: "</bold>",
+              },
+              direct_generator: [
+                {
+                  field: "content_unstemmed.shingle",
+                },
+              ],
+              // collate: {
+              //   query: {
+              //     source: {
+              //       match: {
+              //         content: "{{suggestion}}",
+              //       },
+              //     },
+              //   },
+              //   prune: true,
+              // },
+            },
+          },
+        },
       });
 
+      const phraseSuggester = results.suggest?.phrase_suggester;
+      const suggestOptions = phraseSuggester?.at(0)
+        ?.options as SearchTermSuggestOption[];
+      const suggestion = suggestOptions[0];
+
+      const hasSuggestionOustideQuery =
+        suggestion != undefined &&
+        suggestion?.text.split(" ").some((term) => !input.query.includes(term));
+
       return {
+        suggest: { ...suggestion, hasSuggestionOustideQuery },
         aggs: results.aggregations,
         elapsedTime: performance.now() - startTime,
         total: results.hits.total,

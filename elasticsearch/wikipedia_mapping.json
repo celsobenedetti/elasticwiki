@@ -16,6 +16,19 @@
           "char_filter": [],
           "tokenizer": "standard",
           "filter": ["asciifolding", "lowercase"]
+        },
+        "shingle": {
+          "type": "custom",
+          "char_filter": [],
+          "tokenizer": "standard",
+          "filter": ["asciifolding", "lowercase", "shingle_filter"]
+        }
+      },
+      "filter": {
+        "shingle_filter": {
+          "type": "shingle",
+          "min_shingle_size": 2,
+          "max_shingle_size": 3
         }
       }
     }
@@ -38,7 +51,13 @@
       },
       "content_unstemmed": {
         "type": "text",
-        "analyzer": "analyzer_for_unstemmed_content"
+        "analyzer": "analyzer_for_unstemmed_content",
+        "fields": {
+          "shingle": {
+            "type": "text",
+            "analyzer": "shingle"
+          }
+        }
       },
       "dt_creation": {
         "type": "date"
