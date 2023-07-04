@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
+import DOMPurify from "isomorphic-dompurify";
 
 import {
   type SearchTotalHits,
@@ -204,7 +205,9 @@ function SearchResult({ document }: { document: SearchHit<WikiDocument> }) {
       </a>
       <CardContent
         className="search-highlights"
-        dangerouslySetInnerHTML={{ __html: highlight.content }}
+        dangerouslySetInnerHTML={{
+          __html: DOMPurify.sanitize(highlight.content.toString()),
+        }}
       />
       <CardFooter className="justify-between gap-2 pr-8 text-slate-500">
         <p className="text-sm">{reading_time} min read</p>
