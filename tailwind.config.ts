@@ -13,5 +13,9 @@ export default {
     },
   },
 
-  plugins: [shadcnPlugin, require("tailwindcss-animate")],
+  plugins: [
+    shadcnPlugin,
+    require("tailwindcss-animate"),
+    require("tailwind-scrollbar"),
+  ],
 } satisfies Config;
