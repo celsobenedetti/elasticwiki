@@ -25,7 +25,7 @@ export const searchRouter = createTRPCRouter({
           match: { content: input.query },
         },
         aggs: {
-          keywords: {
+          suggestions: {
             significant_text: {
               field: "content_unstemmed",
             },
@@ -42,7 +42,7 @@ export const searchRouter = createTRPCRouter({
       });
 
       return {
-        agg: results.aggregations,
+        aggs: results.aggregations,
         elapsedTime: performance.now() - startTime,
         total: results.hits.total,
         nextCursor: cursor + 1,

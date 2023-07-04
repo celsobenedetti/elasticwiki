@@ -9,7 +9,11 @@ import { InView } from "react-intersection-observer";
 
 import { api } from "@/lib/api";
 import { useSearch } from "@/store/search";
-import { SEARCH_RESULTS_SIZE, type WikiDocument } from "@/lib/search";
+import {
+  SEARCH_RESULTS_SIZE,
+  type SuggestionsAgg as KeywordsAgg,
+  type WikiDocument,
+} from "@/lib/search";
 
 import { Button } from "@/components/ui/button";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -73,12 +77,21 @@ export default function Search() {
     );
   }
 
-  console.log({ searchResults, data });
+  const suggestionsAgg = data.pages[0]?.aggs?.suggestions as KeywordsAgg;
+  const suggestions = (suggestionsAgg?.buckets || [])
+    .map((suggestion) => suggestion.key)
+    .filter((word) => !searchQuery.includes(word) && word.length > 3);
+
+  console.log({ searchResults, data, suggestions });
 
   return (
     <main className="mx-auto pb-2 pt-header sm:w-10/12">
       <section className="my-4 flex flex-col items-center gap-6 px-4">
         <SearchMetadata />
+
+        {suggestions.length > 0 && (
+          <TermSuggestions suggestions={suggestions} />
+        )}
 
         {searchResults.map((document) => (
           <SearchResult document={document} key={document._id} />
@@ -146,6 +159,31 @@ export default function Search() {
       );
     return <div></div>;
   }
+}
+
+function TermSuggestions(props: { suggestions: string[] }): React.ReactNode {
+  const router = useRouter();
+  const { searchQuery, setSearchQuery } = useSearch();
+
+  return (
+    <div className="flex w-full gap-1 overflow-x-auto rounded-3xl py-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-100">
+      {props.suggestions.map((term) => (
+        <Button
+          variant="secondary"
+          size="sm"
+          className="rounded-full"
+          key={term}
+          onClick={() => {
+            const newQuery = searchQuery + " " + term;
+            router.query = { query: newQuery };
+            setSearchQuery(newQuery);
+          }}
+        >
+          {term}
+        </Button>
+      ))}
+    </div>
+  );
 }
 
 function SearchResult({ document }: { document: SearchHit<WikiDocument> }) {
