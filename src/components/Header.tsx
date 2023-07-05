@@ -4,7 +4,7 @@ import { HeroIcon, type SVGShape } from "./HeroIcon";
 import { useRouter } from "next/router";
 import SearchBar from "./SearchBar";
 import { useEffect, useState } from "react";
-import { useSearch } from "@/store/search";
+import { useSearchBar } from "@/store/search";
 import Image from "next/image";
 
 export default function Header() {
@@ -76,7 +76,7 @@ export default function Header() {
 function Search() {
   const router = useRouter();
 
-  const { searchQuery: storeSearchQuery, setSearchQuery } = useSearch();
+  const { searchQuery: storeSearchQuery, setSearchQuery } = useSearchBar();
   const [query, setQuery] = useState("");
 
   useEffect(() => {

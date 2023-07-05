@@ -10,7 +10,7 @@ interface SearchStore {
   setSearchQuery: (query: string) => void;
 }
 
-export const useSearch = create<SearchStore>((set) => ({
+export const useSearchBar = create<SearchStore>((set) => ({
   results: undefined,
   setResults: (results: SearchOutput) => set({ results }),
   searchQuery: "",
