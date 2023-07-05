@@ -1,4 +1,6 @@
-# T3 Document Finder App with Elasticsearch
+# Document Finder App
+
+> WIP
 
 - [Next.js](https://nextjs.org)
 - [tRPC](https://trpc.io)
@@ -53,5 +55,7 @@ export TF_VAR_ssh_key=$(cat ~/.ssh/my_key.pub)
 - [Use Terraform to Provision Linode Environments ](https://www.linode.com/docs/guides/how-to-build-your-infrastructure-using-terraform-and-linode/)
 - [Python Elasticsearch Client](https://elasticsearch-py.readthedocs.io/en/v7.10.1/)
 - [Linode: How do I check memory usage?](https://www.linode.com/community/questions/18654/how-do-i-check-memory-usage)
+- [Elastricsearch Phrase Sugester](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesters.html#phrase-suggester)
+  - [Elasticsearch Shingle Token Filter](https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-shingle-tokenfilter.html)
 
 > This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
