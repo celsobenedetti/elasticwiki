@@ -194,7 +194,7 @@ function DidYouMean(props: {
 }) {
   return (
     <a
-      className="group cursor-pointer self-start text-sm text-slate-600"
+      className="group cursor-pointer self-start text-sm text-slate-600 dark:text-slate-500"
       onClick={() => {
         if (props.suggestion.text) {
           props.searchCallback(props.suggestion.text);
@@ -205,7 +205,7 @@ function DidYouMean(props: {
       <span
         className="suggestion-highlight group-hover:text-indigo-500 group-hover:underline"
         dangerouslySetInnerHTML={{
-          __html: DOMPurify.sanitize(props.suggestion.highlighted || ""),
+          __html: props.suggestion.highlighted || "",
         }}
       />
     </a>
@@ -219,7 +219,7 @@ function TermSuggestions(props: {
   const { searchQuery } = useSearch();
 
   return (
-    <div className="flex w-full gap-1 overflow-x-auto rounded-3xl py-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-100">
+    <div className="flex w-full gap-1 overflow-x-auto rounded-3xl py-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-100 dark:scrollbar-thumb-slate-900">
       {props.suggestions.map((term) => (
         <Button
           variant="secondary"
