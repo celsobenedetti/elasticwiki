@@ -3,13 +3,6 @@ import { useState } from "react";
 import { HeroIcon } from "./HeroIcon";
 import { Input } from "./ui/input";
 
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-
 interface Props {
   query: string;
   setQuery: (query: string) => void;
@@ -31,7 +24,7 @@ export default function SearchBar(props: Props) {
       <Input
         value={query}
         onFocus={() => setFocus(true)}
-        onBlur={() => setTimeout(() => setFocus(alwaysShowIcons || false), 100)}
+        onBlur={() => setTimeout(() => setFocus(false), 300)}
         onChange={(e) => setQuery(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
@@ -55,21 +48,15 @@ export default function SearchBar(props: Props) {
 
   function SearchIcon() {
     return (
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger onClick={searchCallback}>
-            <div className="my-auto h-5 w-5 min-w-fit cursor-pointer border-l border-l-slate-200 pl-3 dark:border-l-slate-700">
-              <HeroIcon
-                shape="magnifyingGlass"
-                className="h-5 w-5 cursor-pointer text-indigo-500"
-              />
-            </div>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Search</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      <button
+        className="my-auto h-5 w-5 min-w-fit cursor-pointer border-l border-l-slate-200 pl-3 dark:border-l-slate-700"
+        onClick={searchCallback}
+      >
+        <HeroIcon
+          shape="magnifyingGlass"
+          className="h-5 w-5 cursor-pointer text-indigo-500"
+        />
+      </button>
     );
   }
 
