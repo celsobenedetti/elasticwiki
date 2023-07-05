@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import DOMPurify from "isomorphic-dompurify";
 
 import {
@@ -9,7 +9,7 @@ import {
 import { InView } from "react-intersection-observer";
 
 import { api } from "@/lib/api";
-import { useSearch } from "@/store/search";
+import { useSearchBar } from "@/store/search";
 import {
   SEARCH_RESULTS_SIZE,
   type KeywordsAgg,
@@ -31,7 +31,16 @@ import {
 
 export default function Search() {
   const router = useRouter();
-  const { searchQuery, setSearchQuery } = useSearch();
+  const { searchQuery, setSearchQuery } = useSearchBar();
+
+  const searchCallback = useCallback(
+    (query: string) => {
+      if (!query.length) return;
+      setSearchQuery(query);
+      router.query = { query: query };
+    },
+    [router, setSearchQuery]
+  );
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
     api.elastic.infiniteSearch.useInfiniteQuery(
@@ -47,14 +56,24 @@ export default function Search() {
       }
     );
 
-  const searchCallback = useCallback(
-    (query: string) => {
-      if (!query.length) return;
-      setSearchQuery(query);
-      router.query = { query: query };
-    },
-    [router, setSearchQuery]
-  );
+  const { searchResults, elapsedTimeMS, searchSuggestion } = useMemo(() => {
+    const searchResults = [];
+    let elapsedTimeMS = 0;
+    const searchSuggestion = data?.pages[0]?.suggest;
+
+    for (const page of data?.pages || []) {
+      searchResults.push(...page.docs);
+      elapsedTimeMS += data?.pages[0]?.elapsedTime || 0;
+    }
+    return { searchResults, elapsedTimeMS, searchSuggestion };
+  }, [data]);
+
+  const keywordRecommendations = useMemo(() => {
+    const keywordsAgg = data?.pages[0]?.aggs?.suggestions as KeywordsAgg;
+    return (keywordsAgg?.buckets || [])
+      .map((suggestion) => suggestion.key)
+      .filter((word) => !searchQuery.includes(word) && word.length > 3);
+  }, [data, searchQuery]);
 
   useEffect(() => {
     const queryParam = (router.query["query"] || "") as string;
@@ -71,23 +90,13 @@ export default function Search() {
     );
   }
 
-  let elapsedTimeMS = 0;
-  const searchResults = [] as SearchHit<WikiDocument>[];
-
-  for (const page of data.pages) {
-    searchResults.push(...page.docs);
-    elapsedTimeMS += data.pages[0]?.elapsedTime || 0;
-  }
-
-  const phraseSuggestion = data.pages[0]?.suggest;
-
   if (searchResults.length === 0) {
     return (
       <main className="bg-blue mx-auto flex h-screen flex-col items-center  pb-2 pt-header sm:w-10/12">
         <div className="m-1 h-1/2 self-start">
-          {phraseSuggestion?.hasSuggestionOustideQuery && (
+          {searchSuggestion?.hasSuggestionOustideQuery && (
             <DidYouMean
-              suggestion={phraseSuggestion}
+              suggestion={searchSuggestion}
               searchCallback={searchCallback}
             />
           )}
@@ -96,26 +105,22 @@ export default function Search() {
       </main>
     );
   }
-  const keywordsAgg = data.pages[0]?.aggs?.suggestions as KeywordsAgg;
-  const keywords = (keywordsAgg?.buckets || [])
-    .map((suggestion) => suggestion.key)
-    .filter((word) => !searchQuery.includes(word) && word.length > 3);
 
   return (
     <main className="mx-auto pb-2 pt-header sm:w-10/12">
       <section className="my-4 flex flex-col items-center gap-6 px-4">
         <SearchMetadata />
 
-        {phraseSuggestion?.hasSuggestionOustideQuery && (
+        {searchSuggestion?.hasSuggestionOustideQuery && (
           <DidYouMean
-            suggestion={phraseSuggestion}
+            suggestion={searchSuggestion}
             searchCallback={searchCallback}
           />
         )}
 
-        {keywords.length > 0 && (
+        {keywordRecommendations.length > 0 && (
           <TermSuggestions
-            suggestions={keywords}
+            suggestions={keywordRecommendations}
             searchCallback={searchCallback}
           />
         )}
@@ -216,7 +221,7 @@ function TermSuggestions(props: {
   suggestions: string[];
   searchCallback: (query: string) => void;
 }): React.ReactNode {
-  const { searchQuery } = useSearch();
+  const { searchQuery } = useSearchBar();
 
   return (
     <div className="flex w-full gap-1 overflow-x-auto rounded-3xl py-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-100 dark:scrollbar-thumb-slate-900">
