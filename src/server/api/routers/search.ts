@@ -111,6 +111,18 @@ export const searchRouter = createTRPCRouter({
             ],
           },
         },
+        highlight: {
+          fields: {
+            title: {
+              require_field_match: false,
+              fragment_size: 400,
+              number_of_fragments: 1,
+              no_match_size: 20,
+            },
+          },
+          pre_tags: ["<bold>"],
+          post_tags: ["</bold>"],
+        },
       });
     }),
 });

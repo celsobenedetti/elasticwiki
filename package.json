@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@elastic/elasticsearch": "^8.8.1",
+    "@radix-ui/react-dialog": "^1.0.4",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-tooltip": "^1.0.6",
     "@t3-oss/env-nextjs": "^0.3.1",
@@ -21,6 +22,7 @@
     "@trpc/server": "^10.26.0",
     "class-variance-authority": "^0.6.0",
     "clsx": "^1.2.1",
+    "cmdk": "^0.2.0",
     "isomorphic-dompurify": "^1.7.0",
     "lucide-react": "^0.248.0",
     "next": "^13.4.2",

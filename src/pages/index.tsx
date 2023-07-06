@@ -1,6 +1,6 @@
 import { useSearchBar } from "@/store/search";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useRouter } from "next/router";
 import SearchBar from "@/components/SearchBar";
 
@@ -12,9 +12,7 @@ export default function Home() {
           <span className="text-indigo-500">T3</span> ElasticWiki
         </h1>
 
-        <section className="flex w-10/12 max-w-sm flex-col items-center gap-6 sm:max-w-[36rem]">
-          <Search />
-        </section>
+        <Search />
       </main>
     </>
   );
@@ -26,29 +24,36 @@ function Search() {
   const { setSearchQuery } = useSearchBar();
   const [query, setQuery] = useState("");
 
-  const searchCallback = () => {
-    if (!query) return;
+  const searchCallback = useCallback(
+    (searchQuery: string) => {
+      if (!searchQuery) return;
 
-    setSearchQuery(query);
-    router
-      .push({
-        pathname: "/search",
-        query: { query },
-      })
-      .catch(console.error);
-  };
+      setSearchQuery(searchQuery);
+      router
+        .push({
+          pathname: "/search",
+          query: { searchQuery },
+        })
+        .catch(console.error);
+    },
+    [router, setSearchQuery]
+  );
 
   return (
-    <>
+    <section className="relative mb-20 flex w-10/12 max-w-sm flex-col items-center gap-6 overflow-visible sm:max-w-[36rem]">
       <SearchBar
         searchCallback={searchCallback}
         query={query}
         setQuery={setQuery}
       />
 
-      <Button onClick={searchCallback} variant="secondary" className="w-40">
+      <Button
+        onClick={() => searchCallback(query)}
+        variant="secondary"
+        className="w-40"
+      >
         Search
       </Button>
-    </>
+    </section>
   );
 }

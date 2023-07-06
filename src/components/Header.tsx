@@ -15,13 +15,15 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 z-40 flex h-header w-full items-center justify-between gap-12
+      className={`fixed top-0 z-40 flex h-header w-full  items-center justify-between gap-12
         bg-background px-6 ${!isHome ? "drop-shadow-sm" : ""}`}
     >
       <Logo />
 
-      <div className="w-full">
-        <div className="flex w-full sm:w-4/5">{!isHome && <Search />}</div>
+      <div className="relative flex h-header w-full items-center">
+        <div className="relative flex h-12  sm:w-4/5">
+          {!isHome && <Search />}
+        </div>
       </div>
 
       <ThemeToggle />
@@ -102,7 +104,7 @@ function Search() {
       searchCallback={searchCallback}
       query={query}
       setQuery={setQuery}
-      alwaysShowIcons={true}
+      showIcons={true}
     />
   );
 }
