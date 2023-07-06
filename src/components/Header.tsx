@@ -21,7 +21,7 @@ export default function Header() {
       <Logo />
 
       <div className="relative flex h-header w-full items-center">
-        <div className="relative flex h-12  sm:w-4/5">
+        <div className="relative flex h-12 w-full sm:w-4/5">
           {!isHome && <Search />}
         </div>
       </div>

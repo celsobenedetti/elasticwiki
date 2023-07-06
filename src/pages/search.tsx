@@ -250,13 +250,15 @@ function SearchResult({ document }: { document: SearchHit<WikiDocument> }) {
   const { dt_creation: createdAt, reading_time } = doc;
 
   return (
-    <Card className="border-slate-100 dark:border-slate-900">
+    <Card className="max-w-full border-slate-100 dark:border-slate-900">
       <a href={doc.url} target="#">
         <CardHeader className="group">
           <CardTitle className="text-indigo-500 group-hover:underline">
             {doc.title}
           </CardTitle>
-          <CardDescription className="text-xs">{doc.url}</CardDescription>
+          <CardDescription className="overflow-hidden overflow-ellipsis whitespace-nowrap text-xs ">
+            {doc.url}
+          </CardDescription>
         </CardHeader>
       </a>
       <CardContent
