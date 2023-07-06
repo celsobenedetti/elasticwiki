@@ -65,7 +65,7 @@ if "" in elastic_vars:
 client = Elasticsearch(ca_certs=cert_file, basic_auth=(user, password), hosts=host)
 
 INDEX = "wikipedia"
-BATCH_SIZE = 1000
+BATCH_SIZE = 10000
 
 
 def run():
@@ -88,13 +88,13 @@ def bulk_index():
     with open(es_dir + "/wiki.json") as json_bulk:
         lines = json_bulk.readlines()
 
-        bulk = []
+        batch = []
 
         # process two lines at a time
         for i in range(0, len(lines), 2):
             doc = json.loads(lines[i + 1])
 
-            bulk.append(
+            batch.append(
                 {
                     "_index": INDEX,
                     "_id": i + 1,
@@ -109,13 +109,13 @@ def bulk_index():
                 }
             )
 
-            if len(bulk) == BATCH_SIZE:
-                elastic.bulk(client, bulk)
-                bulk = []
+            if len(batch) == BATCH_SIZE:
+                elastic.bulk(client, batch)
+                batch = []
 
         # Execute the remaining bulk indexing requests
-        if bulk:
-            elastic.bulk(client, bulk)
+        if batch:
+            elastic.bulk(client, batch)
 
 
 run()

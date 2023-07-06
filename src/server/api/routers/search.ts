@@ -58,16 +58,6 @@ export const searchRouter = createTRPCRouter({
                   field: "content_unstemmed.shingle",
                 },
               ],
-              // collate: {
-              //   query: {
-              //     source: {
-              //       match: {
-              //         content: "{{suggestion}}",
-              //       },
-              //     },
-              //   },
-              //   prune: true,
-              // },
             },
           },
         },
