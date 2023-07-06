@@ -38,7 +38,12 @@
     "properties": {
       "title": {
         "type": "text",
-        "analyzer": "analyzer_for_content"
+        "analyzer": "analyzer_for_content",
+        "fields": {
+          "autocomplete": {
+            "type": "search_as_you_type"
+          }
+        }
       },
       "url": {
         "type": "keyword",
