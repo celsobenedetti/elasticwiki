@@ -91,4 +91,26 @@ export const searchRouter = createTRPCRouter({
         docs: results.hits.hits,
       };
     }),
+
+  autocomplete: searchProcedure
+    .input(
+      z.object({
+        query: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      return ctx.elastic.search<WikiDocument>({
+        query: {
+          multi_match: {
+            query: input.query,
+            type: "bool_prefix",
+            fields: [
+              "title.autocomplete",
+              "title.autocomplete._2gram",
+              "title.autocomplete._3gram",
+            ],
+          },
+        },
+      });
+    }),
 });

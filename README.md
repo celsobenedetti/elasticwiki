@@ -57,5 +57,6 @@ export TF_VAR_ssh_key=$(cat ~/.ssh/my_key.pub)
 - [Linode: How do I check memory usage?](https://www.linode.com/community/questions/18654/how-do-i-check-memory-usage)
 - [Elastricsearch Phrase Sugester](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesters.html#phrase-suggester)
   - [Elasticsearch Shingle Token Filter](https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-shingle-tokenfilter.html)
+- [Elasticsearch search_as_you_type Field Type](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-as-you-type.html#search-as-you-type)
 
 > This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
