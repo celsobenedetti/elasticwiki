@@ -175,7 +175,14 @@ export default function Search() {
           no more results
         </div>
       );
-    if (isFetchingNextPage) return <LoadingSpinner />;
+
+    if (isFetchingNextPage)
+      return (
+        <div className="bg-background">
+          <LoadingSpinner />
+        </div>
+      );
+
     if (props.pagesFetched > MAX_SCROLL_FETCH)
       return (
         <Button
