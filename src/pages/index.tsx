@@ -32,7 +32,7 @@ function Search() {
       router
         .push({
           pathname: "/search",
-          query: { searchQuery },
+          query: { query: searchQuery },
         })
         .catch(console.error);
     },
