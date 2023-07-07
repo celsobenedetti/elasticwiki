@@ -1,5 +1,5 @@
 import { createTRPCRouter } from "@/server/api/trpc";
-import { searchRouter } from "./routers/search";
+import { searchRouter } from "@/server/api/routers/search";
 
 /**
  * This is the primary router for your server.
