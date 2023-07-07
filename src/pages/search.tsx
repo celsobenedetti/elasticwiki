@@ -215,7 +215,7 @@ function DidYouMean(props: {
     >
       Did you mean:{" "}
       <ParsedHighlightedText
-        text={props.suggestion.highlighted || ""}
+        text={props.suggestion.highlighted || props.suggestion.text || ""}
         className="suggestion-highlight inline"
       />
     </a>
