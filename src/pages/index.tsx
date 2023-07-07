@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <>
       <main className="bg flex h-screen flex-col items-center justify-center pt-header">
-        <h1 className="mb-20 text-7xl font-extrabold tracking-tight sm:text-[5rem]">
+        <h1 className="mb-20 text-center text-7xl font-extrabold tracking-tight sm:text-[5rem]">
           <span className="text-indigo-500">T3</span> ElasticWiki
         </h1>
 
@@ -50,7 +50,7 @@ function Search() {
       <Button
         onClick={() => searchCallback(query)}
         variant="secondary"
-        className="w-40"
+        className="mt-20  w-40"
       >
         Search
       </Button>
