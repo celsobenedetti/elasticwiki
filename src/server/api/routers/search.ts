@@ -1,10 +1,13 @@
 import { performance } from "perf_hooks";
 import { z } from "zod";
 
-import { INDEX, SEARCH_RESULTS_SIZE, type WikiDocument } from "@/lib/search";
 import { createTRPCRouter, searchProcedure } from "@/server/api/trpc";
-import { type SearchTermSuggestOption } from "@elastic/elasticsearch/lib/api/types";
-import { POST_TAG, PRE_TAG } from "@/lib/highlights";
+import { type WikiDocument } from "@/lib/search";
+import {
+  infiniteSearchOptions,
+  parseKeywordSuggestions,
+  autocompleteSearchOptions,
+} from "@/server/api/services/search";
 
 export const searchRouter = createTRPCRouter({
   infiniteSearch: searchProcedure
@@ -15,64 +18,20 @@ export const searchRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
-      const cursor = input.cursor ?? 1;
+      const cursor = input.cursor ?? 0;
 
       const startTime = performance.now();
-      const results = await ctx.elastic.search<WikiDocument>({
-        index: INDEX,
-        size: SEARCH_RESULTS_SIZE,
-        from: SEARCH_RESULTS_SIZE * cursor,
-        _source_excludes: "content_unstemmed",
-        query: {
-          match: { content: input.query },
-        },
-        aggs: {
-          suggestions: {
-            significant_text: {
-              field: "content_unstemmed",
-            },
-          },
-        },
+      const results = await ctx.elastic.search<WikiDocument>(
+        infiniteSearchOptions(input.query, cursor)
+      );
 
-        highlight: {
-          fields: {
-            content: {
-              number_of_fragments: 0,
-            },
-          },
-          pre_tags: [PRE_TAG],
-          post_tags: [POST_TAG],
-        },
-
-        suggest: {
-          text: input.query,
-          phrase_suggester: {
-            phrase: {
-              field: "content_unstemmed.shingle",
-              confidence: 1,
-              size: 1,
-              max_errors: 2,
-              direct_generator: [
-                {
-                  field: "content_unstemmed.shingle",
-                },
-              ],
-            },
-          },
-        },
-      });
-
-      const phraseSuggester = results.suggest?.phrase_suggester;
-      const suggestOptions = phraseSuggester?.at(0)
-        ?.options as SearchTermSuggestOption[];
-      const suggestion = suggestOptions[0];
-
-      const hasSuggestionOustideQuery =
-        suggestion != undefined &&
-        suggestion?.text.split(" ").some((term) => !input.query.includes(term));
+      const suggestion = parseKeywordSuggestions(
+        input.query,
+        results.suggest?.phrase_suggester
+      );
 
       return {
-        suggest: { ...suggestion, hasSuggestionOustideQuery },
+        suggest: suggestion,
         aggs: results.aggregations,
         elapsedTime: performance.now() - startTime,
         total: results.hits.total,
@@ -88,30 +47,8 @@ export const searchRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
-      return ctx.elastic.search<WikiDocument>({
-        query: {
-          multi_match: {
-            query: input.query,
-            type: "bool_prefix",
-            fields: [
-              "title.autocomplete",
-              "title.autocomplete._2gram",
-              "title.autocomplete._3gram",
-            ],
-          },
-        },
-        highlight: {
-          fields: {
-            title: {
-              require_field_match: false,
-              fragment_size: 400,
-              number_of_fragments: 1,
-              no_match_size: 20,
-            },
-          },
-          pre_tags: [PRE_TAG],
-          post_tags: [POST_TAG],
-        },
-      });
+      return ctx.elastic.search<WikiDocument>(
+        autocompleteSearchOptions(input.query)
+      );
     }),
 });
