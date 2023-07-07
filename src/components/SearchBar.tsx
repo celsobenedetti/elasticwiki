@@ -8,6 +8,7 @@ import { api } from "@/lib/api";
 import { useCallback, useMemo, useState } from "react";
 import { HeroIcon } from "./HeroIcon";
 import LoadingSpinner from "./LoadingSpinner";
+import { Button } from "./ui/button";
 
 interface Props {
   query: string;
@@ -47,7 +48,7 @@ export default function SearchBar(props: Props) {
       }`}
     >
       <Command className="rounded-3xl ">
-        <div className="relative border-b">
+        <div className="relative border-b shadow">
           <CommandInput
             value={query}
             onValueChange={setQuery}
@@ -85,18 +86,29 @@ export default function SearchBar(props: Props) {
     if (!showSuggestions) return;
 
     return (
-      <CommandGroup className="w-full overflow-visible rounded-b-3xl border-x border-b bg-background pt-2 shadow">
-        {suggestions.map((hit) => (
-          <CommandItem
-            onSelect={searchCallback}
-            onClick={() => acceptSuggestion(hit._source?.title ?? "")}
-            className="cursor-pointer"
-            key={hit._id}
+      <>
+        <CommandGroup className="w-full overflow-visible  border-x border-b bg-background pt-2">
+          {suggestions.map((hit) => (
+            <CommandItem
+              onSelect={searchCallback}
+              onClick={() => acceptSuggestion(hit._source?.title ?? "")}
+              className="cursor-pointer"
+              key={hit._id}
+            >
+              {hit?._source?.title}
+            </CommandItem>
+          ))}
+        </CommandGroup>
+        {suggestions.length > 0 && (
+          <Button
+            onClick={() => searchCallback(query)}
+            variant="secondary"
+            className="m-2 mx-auto h-8 w-1/2"
           >
-            {hit?._source?.title}
-          </CommandItem>
-        ))}
-      </CommandGroup>
+            Search
+          </Button>
+        )}
+      </>
     );
   }
 
