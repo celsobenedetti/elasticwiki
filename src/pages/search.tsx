@@ -28,6 +28,7 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import { ParsedHighlightedText } from "@/components/ParseHighlightedText";
 
 export default function Search() {
   const router = useRouter();
@@ -214,11 +215,9 @@ function DidYouMean(props: {
       }}
     >
       Did you mean:{" "}
-      <span
-        className="suggestion-highlight group-hover:text-indigo-500 group-hover:underline"
-        dangerouslySetInnerHTML={{
-          __html: props.suggestion.highlighted || "",
-        }}
+      <ParsedHighlightedText
+        text={props.suggestion.highlighted || ""}
+        className="suggestion-highlight inline"
       />
     </a>
   );
@@ -268,12 +267,12 @@ function SearchResult({ document }: { document: SearchHit<WikiDocument> }) {
           </CardDescription>
         </CardHeader>
       </a>
-      <CardContent
-        className="search-highlights"
-        dangerouslySetInnerHTML={{
-          __html: DOMPurify.sanitize(highlight.content.toString()),
-        }}
-      />
+      <CardContent>
+        <ParsedHighlightedText
+          text={highlight.content.toString()}
+          className="search-highlights"
+        />
+      </CardContent>
       <CardFooter className="justify-between gap-2 pr-8 text-slate-500">
         <p className="text-sm">{reading_time} min read</p>
         {createdAt && (

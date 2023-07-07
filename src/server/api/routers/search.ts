@@ -4,6 +4,7 @@ import { z } from "zod";
 import { INDEX, SEARCH_RESULTS_SIZE, type WikiDocument } from "@/lib/search";
 import { createTRPCRouter, searchProcedure } from "@/server/api/trpc";
 import { type SearchTermSuggestOption } from "@elastic/elasticsearch/lib/api/types";
+import { POST_TAG, PRE_TAG } from "@/lib/highlights";
 
 export const searchRouter = createTRPCRouter({
   infiniteSearch: searchProcedure
@@ -39,6 +40,8 @@ export const searchRouter = createTRPCRouter({
               number_of_fragments: 0,
             },
           },
+          pre_tags: [PRE_TAG],
+          post_tags: [POST_TAG],
         },
 
         suggest: {
@@ -50,8 +53,8 @@ export const searchRouter = createTRPCRouter({
               size: 1,
               max_errors: 2,
               highlight: {
-                pre_tag: "<bold>",
-                post_tag: "</bold>",
+                pre_tag: PRE_TAG,
+                post_tag: POST_TAG,
               },
               direct_generator: [
                 {
@@ -110,8 +113,8 @@ export const searchRouter = createTRPCRouter({
               no_match_size: 20,
             },
           },
-          pre_tags: ["<bold>"],
-          post_tags: ["</bold>"],
+          pre_tags: [PRE_TAG],
+          post_tags: [POST_TAG],
         },
       });
     }),
