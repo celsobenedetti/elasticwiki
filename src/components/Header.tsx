@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import { HeroIcon, type SVGShape } from "./HeroIcon";
 import { useRouter } from "next/router";
 import SearchBar from "./SearchBar";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSearchBar } from "@/store/search";
 import Image from "next/image";
 
@@ -87,17 +87,20 @@ function Search() {
     );
   }, [storeSearchQuery]);
 
-  const searchCallback = () => {
-    if (!query) return;
+  const searchCallback = useCallback(
+    (searchQuery: string) => {
+      if (!searchQuery) return;
 
-    setSearchQuery(query);
-    router
-      .push({
-        pathname: "/search",
-        query: { query },
-      })
-      .catch(console.error);
-  };
+      setSearchQuery(searchQuery);
+      router
+        .push({
+          pathname: "/search",
+          query: { query: searchQuery },
+        })
+        .catch(console.error);
+    },
+    [router, setSearchQuery]
+  );
 
   return (
     <SearchBar
