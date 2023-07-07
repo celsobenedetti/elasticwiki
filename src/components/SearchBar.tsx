@@ -1,12 +1,13 @@
-import { useCallback, useMemo, useState } from "react";
-import { api } from "@/lib/api";
 import {
   Command,
   CommandGroup,
   CommandInput,
   CommandItem,
 } from "@/components/ui/command";
+import { api } from "@/lib/api";
+import { useCallback, useMemo, useState } from "react";
 import { HeroIcon } from "./HeroIcon";
+import LoadingSpinner from "./LoadingSpinner";
 
 interface Props {
   query: string;
@@ -19,10 +20,11 @@ export default function SearchBar(props: Props) {
   const { query, setQuery, searchCallback, showIcons } = props;
   const [isFocused, setFocus] = useState(false);
 
-  const { data } = api.elastic.autocomplete.useQuery(
-    { query: query },
-    { enabled: query.length > 1 }
-  );
+  const { data, isFetching: isFetchingSuggestions } =
+    api.elastic.autocomplete.useQuery(
+      { query: query },
+      { enabled: query.length > 1 }
+    );
 
   const acceptSuggestion = useCallback(
     (suggestion: string) => {
@@ -44,8 +46,8 @@ export default function SearchBar(props: Props) {
           : "rounded-full border hover:shadow"
       }`}
     >
-      <Command className="rounded-3xl">
-        <div className="relative">
+      <Command className="rounded-3xl ">
+        <div className="relative border-b">
           <CommandInput
             value={query}
             onValueChange={setQuery}
@@ -65,23 +67,38 @@ export default function SearchBar(props: Props) {
           )}
         </div>
 
-        {showSuggestions && (
-          <CommandGroup className="w-full overflow-visible rounded-b-3xl border-x border-b bg-background pt-2 shadow">
-            {suggestions.map((hit) => (
-              <CommandItem
-                onSelect={searchCallback}
-                onClick={() => acceptSuggestion(hit._source?.title ?? "")}
-                className="cursor-pointer"
-                key={hit._id}
-              >
-                {hit?._source?.title}
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        )}
+        <CommandSuggestions />
       </Command>
     </div>
   );
+
+  function CommandSuggestions() {
+    if (isFetchingSuggestions) {
+      return (
+        <>
+          <div className="flex w-full items-center justify-center p-1">
+            <LoadingSpinner className="h-5 w-5" />
+          </div>
+        </>
+      );
+    }
+    if (!showSuggestions) return;
+
+    return (
+      <CommandGroup className="w-full overflow-visible rounded-b-3xl border-x border-b bg-background pt-2 shadow">
+        {suggestions.map((hit) => (
+          <CommandItem
+            onSelect={searchCallback}
+            onClick={() => acceptSuggestion(hit._source?.title ?? "")}
+            className="cursor-pointer"
+            key={hit._id}
+          >
+            {hit?._source?.title}
+          </CommandItem>
+        ))}
+      </CommandGroup>
+    );
+  }
 
   function SearchIcon() {
     return (

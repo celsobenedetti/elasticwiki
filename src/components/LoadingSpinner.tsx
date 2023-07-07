@@ -1,10 +1,14 @@
+import { cn } from "@/lib/utils";
 import React from "react";
 
-export default function LoadingSpinner() {
+export default function LoadingSpinner({ className }: { className?: string }) {
   return (
     <svg
       aria-hidden="true"
-      className="h-8 w-8 animate-spin fill-indigo-500 text-gray-200 dark:text-gray-600"
+      className={cn(
+        "h-8 w-8 animate-spin fill-indigo-500 text-gray-200 dark:text-gray-600",
+        className
+      )}
       viewBox="0 0 100 101"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
