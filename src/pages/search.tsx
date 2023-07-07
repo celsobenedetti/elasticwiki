@@ -57,22 +57,31 @@ export default function Search() {
     );
 
   const { searchResults, elapsedTimeMS, searchSuggestion } = useMemo(() => {
-    const searchResults = [];
     let elapsedTimeMS = 0;
-    const searchSuggestion = data?.pages[0]?.suggest;
+    const searchResults = [];
 
     for (const page of data?.pages || []) {
       searchResults.push(...page.docs);
-      elapsedTimeMS += data?.pages[0]?.elapsedTime || 0;
+      elapsedTimeMS += page.elapsedTime;
     }
-    return { searchResults, elapsedTimeMS, searchSuggestion };
+
+    return {
+      searchResults,
+      elapsedTimeMS,
+      searchSuggestion: data?.pages[0]?.suggest,
+    };
   }, [data]);
 
-  const keywordRecommendations = useMemo(() => {
+  const suggestedKeywords = useMemo(() => {
     const keywordsAgg = data?.pages[0]?.aggs?.suggestions as KeywordsAgg;
+
+    const isRelevantSuggestion = (word: string) => {
+      return !searchQuery.includes(word) && word.length > 3;
+    };
+
     return (keywordsAgg?.buckets || [])
       .map((suggestion) => suggestion.key)
-      .filter((word) => !searchQuery.includes(word) && word.length > 3);
+      .filter(isRelevantSuggestion);
   }, [data, searchQuery]);
 
   useEffect(() => {
@@ -118,9 +127,9 @@ export default function Search() {
           />
         )}
 
-        {keywordRecommendations.length > 0 && (
+        {suggestedKeywords.length > 0 && (
           <TermSuggestions
-            suggestions={keywordRecommendations}
+            suggestions={suggestedKeywords}
             searchCallback={searchCallback}
           />
         )}
