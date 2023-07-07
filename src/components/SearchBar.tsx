@@ -41,13 +41,13 @@ export default function SearchBar(props: Props) {
 
   return (
     <div
-      className={`absolute w-full overflow-visible ${
+      className={`absolute w-full overflow-visible border ${
         showSuggestions
-          ? "rounded-b-3xl rounded-t-3xl border-x border-t shadow"
-          : "rounded-full border hover:shadow"
+          ? "rounded-b-3xl rounded-t-3xl shadow"
+          : "rounded-full hover:shadow"
       }`}
     >
-      <Command className="rounded-3xl ">
+      <Command className="rounded-3xl">
         <div className="relative border-b shadow">
           <CommandInput
             value={query}
