@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useMemo } from "react";
-import DOMPurify from "isomorphic-dompurify";
 
 import {
   type SearchTotalHits,
