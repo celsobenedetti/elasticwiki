@@ -9,7 +9,7 @@
           "type": "custom",
           "char_filter": [],
           "tokenizer": "standard",
-          "filter": ["asciifolding", "lowercase", "snowball"]
+          "filter": ["asciifolding", "lowercase", "stop", "snowball"]
         },
         "analyzer_for_unstemmed_content": {
           "type": "custom",

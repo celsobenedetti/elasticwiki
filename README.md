@@ -58,5 +58,6 @@ export TF_VAR_ssh_key=$(cat ~/.ssh/my_key.pub)
 - [Elastricsearch Phrase Sugester](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesters.html#phrase-suggester)
   - [Elasticsearch Shingle Token Filter](https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-shingle-tokenfilter.html)
 - [Elasticsearch search_as_you_type Field Type](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-as-you-type.html#search-as-you-type)
+- [Elasticsearch Stop Token Filter](https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-stop-tokenfilter.html)
 
 > This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
