@@ -27,7 +27,7 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { ParsedHighlightedText } from "@/components/ParseHighlightedText";
+import { ParsedHighlightedText } from "@/components/ParsedHighlightedText";
 
 export default function Search() {
   const router = useRouter();
