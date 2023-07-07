@@ -52,10 +52,6 @@ export const searchRouter = createTRPCRouter({
               confidence: 1,
               size: 1,
               max_errors: 2,
-              highlight: {
-                pre_tag: PRE_TAG,
-                post_tag: POST_TAG,
-              },
               direct_generator: [
                 {
                   field: "content_unstemmed.shingle",
