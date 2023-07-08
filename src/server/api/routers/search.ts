@@ -7,7 +7,7 @@ import {
   infiniteSearchOptions,
   parseKeywordSuggestions,
   autocompleteSearchOptions,
-} from "@/server/api/services/search";
+} from "@/server/api/utils/search";
 
 export const searchRouter = createTRPCRouter({
   infiniteSearch: searchProcedure
