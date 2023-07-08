@@ -4,9 +4,13 @@ import {
   type SearchSuggest,
   type QueryDslTextQueryType,
   type SearchTermSuggestOption,
+  type SearchRequest,
 } from "@elastic/elasticsearch/lib/api/types";
 
-export function infiniteSearchOptions(query: string, cursor: number) {
+export function infiniteSearchOptions(
+  query: string,
+  cursor: number
+): SearchRequest {
   return {
     index: INDEX,
     size: SEARCH_RESULTS_SIZE,
@@ -46,6 +50,11 @@ export function infiniteSearchOptions(query: string, cursor: number) {
               field: "content_unstemmed.shingle",
             },
           ],
+
+          highlight: {
+            pre_tag: PRE_TAG,
+            post_tag: POST_TAG,
+          },
         },
       },
     },
