@@ -1,4 +1,4 @@
-import { HIGHLIGHT_DELIMITER, HIGHLIGHT_TAG } from "@/lib/highlights";
+import { HIGHLIGHT_DELIMITER, HIGHLIGHT_TAG } from "@/lib/search";
 
 function stripDelimiter(text: string) {
   return text.slice(1, -1);

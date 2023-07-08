@@ -1,4 +1,4 @@
-import { PRE_TAG, POST_TAG } from "@/lib/highlights";
+import { PRE_TAG, POST_TAG } from "@/lib/search";
 import { INDEX, SEARCH_RESULTS_SIZE, type WikiDocument } from "@/lib/search";
 import {
   type SearchSuggest,
