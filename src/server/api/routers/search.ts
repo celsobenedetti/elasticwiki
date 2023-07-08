@@ -4,9 +4,9 @@ import { z } from "zod";
 import { createTRPCRouter, searchProcedure } from "@/server/api/trpc";
 import { type WikiDocument } from "@/lib/search";
 import {
-  infiniteSearchOptions,
+  getInfiniteSearchOptions,
   parseKeywordSuggestions,
-  autocompleteSearchOptions,
+  getAutocompleteSearchOptions,
 } from "@/server/api/utils/search";
 
 export const searchRouter = createTRPCRouter({
@@ -22,7 +22,7 @@ export const searchRouter = createTRPCRouter({
 
       const startTime = performance.now();
       const results = await ctx.elastic.search<WikiDocument>(
-        infiniteSearchOptions(input.query, cursor)
+        getInfiniteSearchOptions(input.query, cursor)
       );
 
       const suggestion = parseKeywordSuggestions(
@@ -48,7 +48,7 @@ export const searchRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       return ctx.elastic.search<WikiDocument>(
-        autocompleteSearchOptions(input.query)
+        getAutocompleteSearchOptions(input.query)
       );
     }),
 });

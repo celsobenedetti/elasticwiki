@@ -1,4 +1,4 @@
-import { PRE_TAG, POST_TAG } from "@/lib/search";
+import { PRE_TAG, POST_TAG, CONTENT_FIELD } from "@/lib/search";
 import { INDEX, SEARCH_RESULTS_SIZE, type WikiDocument } from "@/lib/search";
 import {
   type SearchSuggest,
@@ -7,7 +7,7 @@ import {
   type SearchRequest,
 } from "@elastic/elasticsearch/lib/api/types";
 
-export function infiniteSearchOptions(
+export function getInfiniteSearchOptions(
   query: string,
   cursor: number
 ): SearchRequest {
@@ -17,7 +17,22 @@ export function infiniteSearchOptions(
     from: SEARCH_RESULTS_SIZE * cursor,
     _source_excludes: "content_unstemmed",
     query: {
-      match: { content: query },
+      bool: {
+        must_not: [
+          { match: { [CONTENT_FIELD]: { query: "euclidean" } } },
+          { match_phrase: { [CONTENT_FIELD]: { query: "euclidean" } } },
+        ],
+        must: [{ match_phrase: { [CONTENT_FIELD]: "math" } }],
+
+        should: {
+          match: {
+            [CONTENT_FIELD]: query,
+          },
+        },
+      },
+      // match: {
+      //   content: query,
+      // },
     },
     aggs: {
       keywords: {
@@ -65,19 +80,19 @@ export function parseKeywordSuggestions(
   query: string,
   phrase_suggester: SearchSuggest<WikiDocument>[] | undefined
 ) {
-  const phraseSuggester = phrase_suggester;
-  const suggestOptions = phraseSuggester?.at(0)
-    ?.options as SearchTermSuggestOption[];
-  const suggestion = suggestOptions[0];
+  const options = phrase_suggester?.at(0)?.options as SearchTermSuggestOption[];
+  const suggestion = options?.at(0);
 
-  const hasSuggestionOustideQuery =
-    !!suggestion &&
-    suggestion?.text.split(" ").some((term) => !query.includes(term));
+  if (!suggestion) return {};
+
+  const hasSuggestionOustideQuery = suggestion?.text
+    .split(" ")
+    .some((term) => !query.includes(term));
 
   return { ...suggestion, hasSuggestionOustideQuery };
 }
 
-export function autocompleteSearchOptions(query: string) {
+export function getAutocompleteSearchOptions(query: string): SearchRequest {
   return {
     query: {
       multi_match: {
