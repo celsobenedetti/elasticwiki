@@ -73,7 +73,7 @@ export default function Search() {
   }, [data]);
 
   const suggestedKeywords = useMemo(() => {
-    const keywordsAgg = data?.pages[0]?.aggs?.suggestions as KeywordsAgg;
+    const keywordsAgg = data?.pages[0]?.aggs?.keywords as KeywordsAgg;
 
     const isRelevantSuggestion = (word: string) => {
       return !searchQuery.includes(word) && word.length > 3;
@@ -129,7 +129,7 @@ export default function Search() {
 
         {suggestedKeywords.length > 0 && (
           <TermSuggestions
-            suggestions={suggestedKeywords}
+            keywords={suggestedKeywords}
             searchCallback={searchCallback}
           />
         )}
@@ -232,14 +232,14 @@ function DidYouMean(props: {
 }
 
 function TermSuggestions(props: {
-  suggestions: string[];
+  keywords: string[];
   searchCallback: (query: string) => void;
 }): React.ReactNode {
   const { searchQuery } = useSearchBar();
 
   return (
     <div className="flex w-full gap-1 overflow-x-auto rounded-3xl py-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-100 dark:scrollbar-thumb-slate-900">
-      {props.suggestions.map((term) => (
+      {props.keywords.map((term) => (
         <Button
           variant="secondary"
           size="sm"

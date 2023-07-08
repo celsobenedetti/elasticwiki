@@ -20,7 +20,7 @@ export function infiniteSearchOptions(
       match: { content: query },
     },
     aggs: {
-      suggestions: {
+      keywords: {
         significant_text: {
           field: "content_unstemmed",
         },
