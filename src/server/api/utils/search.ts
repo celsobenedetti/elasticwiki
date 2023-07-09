@@ -1,15 +1,22 @@
-import { PRE_TAG, POST_TAG, CONTENT_FIELD } from "@/lib/search";
-import { INDEX, SEARCH_RESULTS_SIZE, type WikiDocument } from "@/lib/search";
 import {
-  type SearchSuggest,
+  INDEX,
+  POST_TAG,
+  PRE_TAG,
+  SEARCH_RESULTS_SIZE,
+  type WikiDocument,
+} from "@/lib/search";
+import {
+  type QueryDslBoolQuery,
   type QueryDslTextQueryType,
-  type SearchTermSuggestOption,
   type SearchRequest,
+  type SearchSuggest,
+  type SearchTermSuggestOption,
 } from "@elastic/elasticsearch/lib/api/types";
 
-export function getInfiniteSearchOptions(
-  query: string,
-  cursor: number
+export function buildInfiniteSearchRequest(
+  cursor: number,
+  input: string,
+  boolQueryDsl: QueryDslBoolQuery
 ): SearchRequest {
   return {
     index: INDEX,
@@ -17,22 +24,7 @@ export function getInfiniteSearchOptions(
     from: SEARCH_RESULTS_SIZE * cursor,
     _source_excludes: "content_unstemmed",
     query: {
-      bool: {
-        must_not: [
-          { match: { [CONTENT_FIELD]: { query: "euclidean" } } },
-          { match_phrase: { [CONTENT_FIELD]: { query: "euclidean" } } },
-        ],
-        must: [{ match_phrase: { [CONTENT_FIELD]: "math" } }],
-
-        should: {
-          match: {
-            [CONTENT_FIELD]: query,
-          },
-        },
-      },
-      // match: {
-      //   content: query,
-      // },
+      bool: boolQueryDsl,
     },
     aggs: {
       keywords: {
@@ -53,7 +45,8 @@ export function getInfiniteSearchOptions(
     },
 
     suggest: {
-      text: query,
+      text: input,
+
       phrase_suggester: {
         phrase: {
           field: "content_unstemmed.shingle",
@@ -83,7 +76,7 @@ export function parseKeywordSuggestions(
   const options = phrase_suggester?.at(0)?.options as SearchTermSuggestOption[];
   const suggestion = options?.at(0);
 
-  if (!suggestion) return {};
+  if (!suggestion) return { hasSuggestionOustideQuery: false };
 
   const hasSuggestionOustideQuery = suggestion?.text
     .split(" ")

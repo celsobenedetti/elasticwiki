@@ -2,9 +2,12 @@ import { performance } from "perf_hooks";
 import { z } from "zod";
 
 import { createTRPCRouter, searchProcedure } from "@/server/api/trpc";
-import { type WikiDocument } from "@/lib/search";
 import {
-  getInfiniteSearchOptions,
+  buildBooleanQueryDsl as buildBooleanQueryDsl,
+  type WikiDocument,
+} from "@/lib/search";
+import {
+  buildInfiniteSearchRequest,
   parseKeywordSuggestions,
   getAutocompleteSearchOptions,
 } from "@/server/api/utils/search";
@@ -21,8 +24,10 @@ export const searchRouter = createTRPCRouter({
       const cursor = input.cursor ?? 0;
 
       const startTime = performance.now();
+
+      const queryDsl = buildBooleanQueryDsl(input.query);
       const results = await ctx.elastic.search<WikiDocument>(
-        getInfiniteSearchOptions(input.query, cursor)
+        buildInfiniteSearchRequest(cursor, input.query, queryDsl)
       );
 
       const suggestion = parseKeywordSuggestions(
