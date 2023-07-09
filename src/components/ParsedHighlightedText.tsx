@@ -5,7 +5,7 @@ function stripDelimiter(text: string) {
 }
 
 /**Parses Elasticsearch highlight reponse into JSX <p/> element with each highlight enclosed in a <em/> tag*/
-export function ParsedHighlightedText({
+export function HighlightedText({
   text,
   className,
 }: {

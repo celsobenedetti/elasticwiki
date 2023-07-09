@@ -27,7 +27,7 @@ import {
 import { Button } from "@/components/ui/button";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { HeroIcon } from "@/components/HeroIcon";
-import { ParsedHighlightedText } from "@/components/ParsedHighlightedText";
+import { HighlightedText } from "@/components/ParsedHighlightedText";
 
 export default function Search() {
   const router = useRouter();
@@ -220,7 +220,7 @@ function DidYouMean(props: {
       }}
     >
       Did you mean:{" "}
-      <ParsedHighlightedText
+      <HighlightedText
         text={props.suggestion.highlighted || props.suggestion.text || ""}
         className="suggestion-highlight inline"
       />
@@ -274,10 +274,7 @@ function SearchResult({ document }: { document: SearchHit<WikiDocument> }) {
         </CardHeader>
       </a>
       <CardContent>
-        <ParsedHighlightedText
-          text={cardContent}
-          className="search-highlights"
-        />
+        <HighlightedText text={cardContent} className="search-highlights" />
       </CardContent>
       <CardFooter className="justify-between gap-2 pr-8 text-slate-500">
         <p className="text-sm">{reading_time} min read</p>
