@@ -9,6 +9,9 @@ import { useCallback, useMemo, useState } from "react";
 import { HeroIcon } from "./HeroIcon";
 import LoadingSpinner from "./LoadingSpinner";
 import { Button } from "./ui/button";
+import { HighlightedText } from "./ParsedHighlightedText";
+import { type SearchHit } from "@elastic/elasticsearch/lib/api/types";
+import { HIGHLIGHT_TAG, type WikiDocument } from "@/lib/search";
 
 interface Props {
   query: string;
@@ -37,7 +40,7 @@ export default function SearchBar(props: Props) {
   );
 
   const suggestions = useMemo(() => data?.hits?.hits, [data]);
-  const showSuggestions = !!suggestions && isFocused;
+  const showSuggestions = !!suggestions && suggestions.length && isFocused;
 
   return (
     <div
@@ -47,7 +50,7 @@ export default function SearchBar(props: Props) {
           : "rounded-full hover:shadow"
       }`}
     >
-      <Command className="rounded-3xl">
+      <Command className="rounded-3xl" shouldFilter={false} loop={true}>
         <div className="relative border-b shadow">
           <CommandInput
             value={query}
@@ -55,6 +58,7 @@ export default function SearchBar(props: Props) {
             onFocus={() => setFocus(true)}
             onBlur={() => setTimeout(() => setFocus(false), 300)}
             onKeyDown={(e) => {
+              setFocus(true);
               if (e.key === "Enter" && !showSuggestions) {
                 searchCallback(query);
               }
@@ -74,41 +78,52 @@ export default function SearchBar(props: Props) {
   );
 
   function CommandSuggestions() {
+    if (!showSuggestions) return;
     if (isFetchingSuggestions) {
       return (
-        <>
-          <div className="flex w-full items-center justify-center p-1">
-            <LoadingSpinner className="h-5 w-5" />
-          </div>
-        </>
+        <div className="flex w-full items-center justify-center p-1">
+          <LoadingSpinner className="h-5 w-5" />
+        </div>
       );
     }
-    if (!showSuggestions) return;
 
     return (
-      <>
-        <CommandGroup className="w-full overflow-visible  border-x border-b bg-background pt-2">
-          {suggestions.map((hit) => (
-            <CommandItem
-              onSelect={searchCallback}
-              onClick={() => acceptSuggestion(hit._source?.title ?? "")}
-              className="cursor-pointer"
-              key={hit._id}
-            >
-              {hit?._source?.title}
-            </CommandItem>
-          ))}
-        </CommandGroup>
-        {suggestions.length > 0 && (
+      <CommandGroup className="w-full overflow-visible  border-x border-b bg-background pt-2">
+        {suggestions.map(SuggestionItem)}
+
+        <div className="flex w-full items-center">
           <Button
             onClick={() => searchCallback(query)}
             variant="secondary"
-            className="m-2 mx-auto h-8 w-1/2"
+            className="m-2 mx-auto h-7 w-1/2"
           >
             Search
           </Button>
-        )}
-      </>
+        </div>
+      </CommandGroup>
+    );
+  }
+  function SuggestionItem(doc: SearchHit<WikiDocument>) {
+    const highlight = doc?.highlight?.title?.at(0) || "";
+    const content = highlight.includes(HIGHLIGHT_TAG)
+      ? highlight
+      : doc._source?.title;
+
+    return (
+      <CommandItem
+        onSelect={(suggestion: string) => {
+          setFocus(false);
+          searchCallback(suggestion);
+        }}
+        onClick={() => acceptSuggestion(doc._source?.title ?? "")}
+        className="cursor-pointer"
+        key={doc._id}
+      >
+        <HighlightedText
+          className="suggestion-highlight not-italic"
+          text={content || ""}
+        />
+      </CommandItem>
     );
   }
 
