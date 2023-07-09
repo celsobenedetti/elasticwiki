@@ -16,9 +16,6 @@ import {
   type DidYouMeanSuggestion,
 } from "@/lib/search";
 
-import { Button } from "@/components/ui/button";
-import LoadingSpinner from "@/components/LoadingSpinner";
-import { HeroIcon } from "@/components/HeroIcon";
 import {
   Card,
   CardHeader,
@@ -27,6 +24,9 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import { HeroIcon } from "@/components/HeroIcon";
 import { ParsedHighlightedText } from "@/components/ParsedHighlightedText";
 
 export default function Search() {
@@ -56,7 +56,7 @@ export default function Search() {
       }
     );
 
-  const { searchResults, elapsedTimeMS, searchSuggestion } = useMemo(() => {
+  const { searchResults, elapsedTimeMS, didYouMeanSuggestion } = useMemo(() => {
     let elapsedTimeMS = 0;
     const searchResults = [];
 
@@ -68,7 +68,7 @@ export default function Search() {
     return {
       searchResults,
       elapsedTimeMS,
-      searchSuggestion: data?.pages[0]?.suggest,
+      didYouMeanSuggestion: data?.pages[0]?.suggest,
     };
   }, [data]);
 
@@ -103,9 +103,9 @@ export default function Search() {
     return (
       <main className="bg-blue mx-auto flex h-screen flex-col items-center  pb-2 pt-header sm:w-10/12">
         <div className="m-1 h-1/2 self-start">
-          {searchSuggestion?.hasSuggestionOustideQuery && (
+          {didYouMeanSuggestion?.hasSuggestionOustideQuery && (
             <DidYouMean
-              suggestion={searchSuggestion}
+              suggestion={didYouMeanSuggestion}
               searchCallback={searchCallback}
             />
           )}
@@ -119,25 +119,21 @@ export default function Search() {
     <main className="mx-auto pb-2 pt-header sm:w-10/12">
       <section className="my-4 flex flex-col items-center gap-6 px-4">
         <SearchMetadata />
-
-        {searchSuggestion?.hasSuggestionOustideQuery && (
+        {didYouMeanSuggestion?.hasSuggestionOustideQuery && (
           <DidYouMean
-            suggestion={searchSuggestion}
+            suggestion={didYouMeanSuggestion}
             searchCallback={searchCallback}
           />
         )}
-
         {suggestedKeywords.length > 0 && (
           <TermSuggestions
             keywords={suggestedKeywords}
             searchCallback={searchCallback}
           />
         )}
-
         {searchResults.map((document) => (
           <SearchResult document={document} key={document._id} />
         ))}
-
         <SearchFooterBar />
       </section>
     </main>
@@ -146,7 +142,7 @@ export default function Search() {
   function SearchMetadata() {
     const totalResults = data?.pages[0]?.total as SearchTotalHits;
     const numberOfResults = totalResults?.value || 0;
-    const elapsedTime = (elapsedTimeMS / SECOND).toFixed(3);
+    const elapsedTime = (elapsedTimeMS / ONE_SECOND).toFixed(3);
 
     return (
       <p className="self-start text-sm text-slate-500">
@@ -165,7 +161,7 @@ export default function Search() {
     return (
       <InView
         onChange={(inView) => {
-          if (inView && pagesFetchedCount <= MAX_SCROLL_FETCH) {
+          if (inView && pagesFetchedCount <= MAX_SCROLL_AUTO_FETCHES) {
             fetchNextPage().catch(console.error);
           }
         }}
@@ -192,7 +188,7 @@ export default function Search() {
         </div>
       );
 
-    if (props.pagesFetched > MAX_SCROLL_FETCH)
+    if (props.pagesFetched > MAX_SCROLL_AUTO_FETCHES)
       return (
         <Button
           onClick={() => {
@@ -205,7 +201,8 @@ export default function Search() {
           <HeroIcon shape="chevronDown" className="h-5 w-5 text-slate-500" />
         </Button>
       );
-    return <div></div>;
+
+    return <></>;
   }
 }
 
@@ -259,9 +256,10 @@ function TermSuggestions(props: {
 
 function SearchResult({ document }: { document: SearchHit<WikiDocument> }) {
   const { _source: doc, highlight } = document;
-  if (!doc || !highlight || !highlight.content) return <></>;
+  if (!doc) return <></>;
 
   const { dt_creation: createdAt, reading_time } = doc;
+  const cardContent = highlight?.content?.toString() || doc.content;
 
   return (
     <Card className="max-w-full border-slate-100 dark:border-slate-900">
@@ -277,7 +275,7 @@ function SearchResult({ document }: { document: SearchHit<WikiDocument> }) {
       </a>
       <CardContent>
         <ParsedHighlightedText
-          text={highlight.content.toString()}
+          text={cardContent}
           className="search-highlights"
         />
       </CardContent>
@@ -294,5 +292,5 @@ function SearchResult({ document }: { document: SearchHit<WikiDocument> }) {
   );
 }
 
-const SECOND = 1000;
-const MAX_SCROLL_FETCH = 3;
+const ONE_SECOND = 1000;
+const MAX_SCROLL_AUTO_FETCHES = 2;
