@@ -88,23 +88,56 @@ export function parseKeywordSuggestions(
 export function getAutocompleteSearchOptions(query: string): SearchRequest {
   return {
     query: {
-      multi_match: {
-        query: query,
-        type: "bool_prefix" as QueryDslTextQueryType,
+      bool: {
+        should: [
+          {
+            multi_match: {
+              query: query,
+              type: "bool_prefix" as QueryDslTextQueryType,
 
-        fields: [
-          "title.autocomplete",
-          "title.autocomplete._2gram",
-          "title.autocomplete._3gram",
+              fields: [
+                "title.autocomplete",
+                "title.autocomplete._2gram",
+                "title.autocomplete._3gram",
+              ],
+            },
+          },
         ],
       },
     },
     highlight: {
       fields: {
         title: {
+          type: "unified",
+          highlight_query: {
+            bool: {
+              should: [
+                {
+                  match_phrase_prefix: {
+                    title: {
+                      query: query,
+                      slop: 10,
+                      max_expansions: 50,
+                    },
+                  },
+                },
+                {
+                  match: {
+                    title: {
+                      query: query,
+                      operator: "and",
+                      fuzziness: "AUTO",
+                      prefix_length: 2,
+                    },
+                  },
+                },
+              ],
+              minimum_should_match: 1,
+            },
+          },
           require_field_match: false,
           fragment_size: 400,
-          number_of_fragments: 1,
+          number_of_fragments: 4,
           no_match_size: 20,
         },
       },
