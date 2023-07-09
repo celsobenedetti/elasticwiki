@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { buildBooleanQueryDsl } from "../parse";
+import { buildBooleanQuery } from "../parse";
 import { CONTENT_FIELD } from "../types";
 
 describe("buildBooleanQueryDsl", () => {
   it("should build boolean query with multiple conditions", () => {
-    const result = buildBooleanQueryDsl(
+    const result = buildBooleanQuery(
       '"some query" with !"negated quoted segments" eating banana not !apple-juice'
     );
 
@@ -20,7 +20,7 @@ describe("buildBooleanQueryDsl", () => {
   });
 
   it("should build boolean query with only quoted phrases", () => {
-    const result = buildBooleanQueryDsl('"some query"');
+    const result = buildBooleanQuery('"some query"');
 
     expect(result).toMatchObject({
       must: [{ match_phrase: { [CONTENT_FIELD]: '"some query"' } }],
@@ -28,7 +28,7 @@ describe("buildBooleanQueryDsl", () => {
   });
 
   it("should build boolean query with negated quoted phrases", () => {
-    const result = buildBooleanQueryDsl('!"negated quoted segments"');
+    const result = buildBooleanQuery('!"negated quoted segments"');
 
     expect(result).toMatchObject({
       must_not: [
@@ -38,7 +38,7 @@ describe("buildBooleanQueryDsl", () => {
   });
 
   it("should build boolean query with negated terms", () => {
-    const result = buildBooleanQueryDsl("!apple-juice");
+    const result = buildBooleanQuery("!apple-juice");
 
     expect(result).toMatchObject({
       must_not: [{ match: { [CONTENT_FIELD]: "!apple-juice" } }],
@@ -46,7 +46,7 @@ describe("buildBooleanQueryDsl", () => {
   });
 
   it("should build boolean query with regular terms", () => {
-    const result = buildBooleanQueryDsl("eating banana not");
+    const result = buildBooleanQuery("eating banana not");
 
     expect(result).toMatchObject({
       should: [{ match: { [CONTENT_FIELD]: "eating banana not" } }],

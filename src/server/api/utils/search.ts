@@ -1,12 +1,13 @@
 import {
+  type WikiDocument,
   INDEX,
   POST_TAG,
   PRE_TAG,
   SEARCH_RESULTS_SIZE,
-  type WikiDocument,
+  TITLE_FIELD,
+  buildBooleanQuery,
 } from "@/lib/search";
 import {
-  type QueryDslBoolQuery,
   type QueryDslTextQueryType,
   type SearchRequest,
   type SearchSuggest,
@@ -15,16 +16,21 @@ import {
 
 export function buildInfiniteSearchRequest(
   cursor: number,
-  input: string,
-  boolQueryDsl: QueryDslBoolQuery
+  query: string
 ): SearchRequest {
+  const { must, must_not, should } = buildBooleanQuery(query);
+
   return {
     index: INDEX,
     size: SEARCH_RESULTS_SIZE,
     from: SEARCH_RESULTS_SIZE * cursor,
     _source_excludes: "content_unstemmed",
     query: {
-      bool: boolQueryDsl,
+      bool: {
+        should,
+        must,
+        must_not,
+      },
     },
     aggs: {
       keywords: {
@@ -45,7 +51,7 @@ export function buildInfiniteSearchRequest(
     },
 
     suggest: {
-      text: input,
+      text: query,
 
       phrase_suggester: {
         phrase: {
@@ -85,14 +91,16 @@ export function parseKeywordSuggestions(
   return { ...suggestion, hasSuggestionOustideQuery };
 }
 
-export function getAutocompleteSearchOptions(query: string): SearchRequest {
+export function buildAutocompleteSearchRequest(query: string): SearchRequest {
+  const { must, must_not, terms } = buildBooleanQuery(query, TITLE_FIELD);
+
   return {
     query: {
       bool: {
         should: [
           {
             multi_match: {
-              query: query,
+              query: terms,
               type: "bool_prefix" as QueryDslTextQueryType,
 
               fields: [
@@ -103,6 +111,8 @@ export function getAutocompleteSearchOptions(query: string): SearchRequest {
             },
           },
         ],
+        must,
+        must_not,
       },
     },
     highlight: {

@@ -27,3 +27,4 @@ export interface DidYouMeanSuggestion {
 export const SEARCH_RESULTS_SIZE = 10;
 export const INDEX = "wikipedia";
 export const CONTENT_FIELD = "content";
+export const TITLE_FIELD = "title";

@@ -1,7 +1,4 @@
-import {
-  type QueryDslBoolQuery,
-  type QueryDslQueryContainer,
-} from "@elastic/elasticsearch/lib/api/types";
+import { type QueryDslQueryContainer } from "@elastic/elasticsearch/lib/api/types";
 import { CONTENT_FIELD } from "./types";
 
 const QUOTED_PHRASE = /"([^"]+)"/g;
@@ -18,13 +15,17 @@ For each following {query}, returns:
 !negatedTerm                => must_not: { match: {query} }
 regularTerms                => should: { match: {query}}
 */
-export function buildBooleanQueryDsl(input: string) {
-  return searchOptionsToBoolQuery(inputToSearchOptions(input));
+export function buildBooleanQuery(
+  input: string,
+  field: string = CONTENT_FIELD
+) {
+  return booleanQueryConstraints(inputToQueryTokens(input), field);
 }
 
 /** Parses search options into Elasticsearch boolean query object */
-function searchOptionsToBoolQuery(
-  options: ReturnType<typeof inputToSearchOptions>
+function booleanQueryConstraints(
+  options: ReturnType<typeof inputToQueryTokens>,
+  field: string
 ) {
   const { terms, negatedTerms, quotedPhrases, negatedQuotedPhrases } = options;
 
@@ -32,9 +33,9 @@ function searchOptionsToBoolQuery(
   const must = [] as QueryDslQueryContainer[];
   const must_not = [] as QueryDslQueryContainer[];
 
-  const toContentObject = (s: string) => ({ [CONTENT_FIELD]: s });
-  const toMatch = (s: string) => ({ match: toContentObject(s) });
-  const toMatchPhrase = (s: string) => ({ match_phrase: toContentObject(s) });
+  const toFieldObject = (s: string) => ({ [field]: s });
+  const toMatch = (s: string) => ({ match: toFieldObject(s) });
+  const toMatchPhrase = (s: string) => ({ match_phrase: toFieldObject(s) });
 
   if (terms.length) {
     should.push(toMatch(terms));
@@ -44,20 +45,14 @@ function searchOptionsToBoolQuery(
   must_not.push(...negatedTerms.map(toMatch));
   must_not.push(...negatedQuotedPhrases.map(toMatchPhrase));
 
-  const result = {} as QueryDslBoolQuery;
-
-  if (should.length) result.should = should;
-  if (must.length) result.must = must;
-  if (must_not.length) result.must_not = must_not;
-
-  return result;
+  return { must, must_not, should, terms };
 }
 
 /** Parses input string into an search match options object
 eg: "quotes" into match_phrase objects
 eg: !negation into NOT match word 
 eg: !"some phrase" into NOT match phrase */
-function inputToSearchOptions(input: string) {
+function inputToQueryTokens(input: string) {
   let terms = input;
 
   const negatedQuotedPhrases = input.match(NEGATED_PHRASE);
