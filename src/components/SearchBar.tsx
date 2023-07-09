@@ -78,14 +78,14 @@ export default function SearchBar(props: Props) {
   );
 
   function CommandSuggestions() {
-    if (!showSuggestions) return;
-    if (isFetchingSuggestions) {
+    if (isFetchingSuggestions && isFocused) {
       return (
         <div className="flex w-full items-center justify-center p-1">
           <LoadingSpinner className="h-5 w-5" />
         </div>
       );
     }
+    if (!showSuggestions) return;
 
     return (
       <CommandGroup className="w-full overflow-visible  border-x border-b bg-background pt-2">
