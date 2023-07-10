@@ -42,7 +42,7 @@ export default function Header() {
         onClick={() => {
           router.push("/").catch(console.error);
         }}
-        className="transition-all duration-200 ease-in-out hover:scale-105 hover:transform hover:opacity-80"
+        className="transition-all duration-200 ease-in-out  hover:opacity-70"
       >
         <Image
           alt="T3 Logo"
