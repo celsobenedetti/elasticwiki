@@ -1,11 +1,12 @@
 import { type AppType } from "next/app";
 import Head from "next/head";
 
-import "@/styles/globals.css";
 import { api } from "@/lib/api";
+import "@/styles/globals.css";
 
 import Header from "@/components/Header";
 import { ThemeHandler } from "@/store/theme";
+import Footer from "@/components/Footer";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
@@ -25,6 +26,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 
       <Header />
       <Component {...pageProps} />
+      <Footer />
     </>
   );
 };

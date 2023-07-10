@@ -7,7 +7,7 @@ import SearchBar from "@/components/SearchBar";
 export default function Home() {
   return (
     <>
-      <main className="bg flex h-screen flex-col items-center justify-center pt-header">
+      <main className="bg flex h-page flex-col items-center justify-center pt-header">
         <h1 className="mb-20 text-center text-7xl font-extrabold tracking-tight sm:text-[5rem]">
           <span className="text-indigo-500">T3</span> ElasticWiki
         </h1>
