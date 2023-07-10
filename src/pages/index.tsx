@@ -46,6 +46,7 @@ function Search() {
         query={query}
         setQuery={setQuery}
         showIcons={!!query.length}
+        showInfo={true}
       />
 
       <Button

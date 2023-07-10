@@ -1,27 +1,32 @@
+import { useCallback, useMemo, useState } from "react";
+import { type SearchHit } from "@elastic/elasticsearch/lib/api/types";
+
+import { HIGHLIGHT_TAG, type WikiDocument } from "@/lib/search";
+import { api } from "@/lib/api";
+
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandGroup,
   CommandInput,
   CommandItem,
 } from "@/components/ui/command";
-import { api } from "@/lib/api";
-import { useCallback, useMemo, useState } from "react";
+
 import { HeroIcon } from "./HeroIcon";
 import LoadingSpinner from "./LoadingSpinner";
-import { Button } from "./ui/button";
 import { HighlightedText } from "./ParsedHighlightedText";
-import { type SearchHit } from "@elastic/elasticsearch/lib/api/types";
-import { HIGHLIGHT_TAG, type WikiDocument } from "@/lib/search";
+import InfoPopover from "./InfoPopover";
 
 interface Props {
   query: string;
   setQuery: (query: string) => void;
   searchCallback: (query: string) => void;
   showIcons?: boolean;
+  showInfo?: boolean;
 }
 
 export default function SearchBar(props: Props) {
-  const { query, setQuery, searchCallback, showIcons } = props;
+  const { query, setQuery, searchCallback, showIcons, showInfo } = props;
   const [isFocused, setFocus] = useState(false);
 
   const { data, isFetching: isFetchingSuggestions } =
@@ -44,16 +49,19 @@ export default function SearchBar(props: Props) {
 
   return (
     <div
-      className={`absolute w-full overflow-visible border ${
-        showSuggestions
-          ? "rounded-b-3xl rounded-t-3xl shadow"
-          : "rounded-full hover:shadow"
+      className={`absolute w-full overflow-visible border dark:border-slate-700 ${
+        showSuggestions ? "rounded-b-3xl rounded-t-3xl shadow" : "rounded-full "
       }`}
     >
-      <Command className="rounded-3xl" shouldFilter={false} loop={true}>
+      <Command
+        className="rounded-3xl hover:shadow"
+        shouldFilter={false}
+        loop={true}
+      >
         <div className="relative border-b shadow">
           <CommandInput
             value={query}
+            className="pr-14"
             onValueChange={setQuery}
             onFocus={() => setFocus(true)}
             onBlur={() => setTimeout(() => setFocus(false), 300)}
@@ -65,7 +73,7 @@ export default function SearchBar(props: Props) {
             }}
           />
           {showIcons && (
-            <div className="absolute bottom-0 right-7 top-0 my-auto flex gap-3">
+            <div className="absolute bottom-0 right-7 top-0 my-auto flex sm:gap-3">
               {Boolean(query) && <ClearX />}
               <SearchIcon />
             </div>
@@ -74,6 +82,8 @@ export default function SearchBar(props: Props) {
 
         <CommandSuggestions />
       </Command>
+
+      {showInfo && <InfoPopover />}
     </div>
   );
 
