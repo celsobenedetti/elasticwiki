@@ -15,8 +15,8 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 z-40 flex h-header w-full  items-center justify-between gap-12
-        bg-background px-6 ${!isHome ? "drop-shadow-sm" : ""}`}
+      className={`fixed top-0 z-40 flex h-header w-full  items-center justify-between  gap-4 bg-background
+        px-6 md:gap-20 ${!isHome ? "drop-shadow-sm" : ""}`}
     >
       <Logo />
 
