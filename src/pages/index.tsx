@@ -45,6 +45,7 @@ function Search() {
         searchCallback={searchCallback}
         query={query}
         setQuery={setQuery}
+        showIcons={!!query.length}
       />
 
       <Button
