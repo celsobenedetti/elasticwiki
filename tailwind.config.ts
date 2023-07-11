@@ -1,3 +1,4 @@
+import colors from "tailwindcss/colors";
 import { shadcnPlugin } from "./src/styles/shadcn-plugin";
 import { type Config } from "tailwindcss";
 
@@ -16,6 +17,10 @@ export default {
       },
       padding: {
         header: headerSize,
+      },
+      textColor: {
+        active: colors.slate["600"],
+        ["active-dark"]: colors.slate["500"],
       },
     },
   },

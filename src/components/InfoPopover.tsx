@@ -10,7 +10,7 @@ export default function InfoPopover() {
   return (
     <Popover>
       <PopoverTrigger className="absolute right-[-2rem] top-3 ">
-        <HeroIcon shape="info" className="text-slate-400 dark:text-slate-600" />
+        <HeroIcon shape="info" className="text-slate-400 dark:text-active" />
       </PopoverTrigger>
       <PopoverContent className="flex w-80 flex-col gap-2 px-8 text-sm">
         <p>Search around 36k Wikipedia pages</p>

@@ -145,7 +145,7 @@ export default function Search() {
     const elapsedTime = (elapsedTimeMS / ONE_SECOND).toFixed(3);
 
     return (
-      <p className="self-start text-sm text-slate-500">
+      <p className="self-start text-sm text-active-dark">
         Found {numberOfResults} results ({elapsedTime} seconds)
       </p>
     );
@@ -176,7 +176,7 @@ export default function Search() {
   function SearchFooterContent(props: { pagesFetched: number }) {
     if (!hasNextPage)
       return (
-        <div className="rounded-2xl bg-slate-200 px-2 text-sm  text-slate-500 dark:bg-slate-900">
+        <div className="rounded-2xl bg-slate-200 px-2 text-sm  text-active-dark dark:bg-slate-900">
           no more results
         </div>
       );
@@ -198,7 +198,7 @@ export default function Search() {
           className="flex gap-3 rounded-full px-12 text-sm"
         >
           <p>More results</p>
-          <HeroIcon shape="chevronDown" className="h-5 w-5 text-slate-500" />
+          <HeroIcon shape="chevronDown" className="h-5 w-5 text-active-dark" />
         </Button>
       );
 
@@ -212,7 +212,7 @@ function DidYouMean(props: {
 }) {
   return (
     <a
-      className="group cursor-pointer self-start text-sm text-slate-600 dark:text-slate-500"
+      className="group cursor-pointer self-start text-sm text-active dark:text-active-dark"
       onClick={() => {
         if (props.suggestion.text) {
           props.searchCallback(props.suggestion.text);
@@ -276,7 +276,7 @@ function SearchResult({ document }: { document: SearchHit<WikiDocument> }) {
       <CardContent>
         <HighlightedText text={cardContent} className="search-highlights" />
       </CardContent>
-      <CardFooter className="justify-between gap-2 pr-8 text-slate-500">
+      <CardFooter className="justify-between gap-2 pr-8 text-active-dark">
         <p className="text-sm">{reading_time} min read</p>
         {createdAt && (
           <p className="text-xs">
