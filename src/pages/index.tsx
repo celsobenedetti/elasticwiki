@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 import { useRouter } from "next/router";
 import SearchBar from "@/components/SearchBar";
 
-import { AdvancedSearchButton } from "@/components/AdvancedSearchTooltip";
+import { AdvancedSearch } from "@/components/AdvancedSearch";
 
 export default function Home() {
   return (
@@ -60,7 +60,7 @@ function Search() {
           Search
         </Button>
 
-        <AdvancedSearchButton />
+        <AdvancedSearch />
       </div>
     </section>
   );
