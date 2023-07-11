@@ -4,6 +4,8 @@ import { useCallback, useState } from "react";
 import { useRouter } from "next/router";
 import SearchBar from "@/components/SearchBar";
 
+import { AdvancedSearchButton } from "@/components/AdvancedSearchTooltip";
+
 export default function Home() {
   return (
     <>
@@ -49,13 +51,17 @@ function Search() {
         showInfo={true}
       />
 
-      <Button
-        onClick={() => searchCallback(query)}
-        variant="secondary"
-        className="mt-20  w-40"
-      >
-        Search
-      </Button>
+      <div className="mt-20 flex items-center justify-center gap-3">
+        <Button
+          onClick={() => searchCallback(query)}
+          variant="secondary"
+          className="w-40"
+        >
+          Search
+        </Button>
+
+        <AdvancedSearchButton />
+      </div>
     </section>
   );
 }
