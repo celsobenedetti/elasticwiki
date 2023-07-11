@@ -1,4 +1,4 @@
-import { useSearchBar } from "@/store/search";
+import { useSearch } from "@/store/search";
 import { Button } from "@/components/ui/button";
 import { useCallback, useState } from "react";
 import { useRouter } from "next/router";
@@ -23,7 +23,7 @@ export default function Home() {
 function Search() {
   const router = useRouter();
 
-  const { setSearchQuery } = useSearchBar();
+  const { setSearchQuery } = useSearch();
   const [query, setQuery] = useState("");
 
   const searchCallback = useCallback(

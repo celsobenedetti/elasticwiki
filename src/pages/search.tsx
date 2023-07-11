@@ -8,7 +8,7 @@ import {
 import { InView } from "react-intersection-observer";
 
 import { api } from "@/lib/api";
-import { useSearchBar } from "@/store/search";
+import { useSearch } from "@/store/search";
 import {
   SEARCH_RESULTS_SIZE,
   type KeywordsAgg,
@@ -31,7 +31,7 @@ import { HighlightedText } from "@/components/ParsedHighlightedText";
 
 export default function Search() {
   const router = useRouter();
-  const { searchQuery, setSearchQuery } = useSearchBar();
+  const { searchQuery, setSearchQuery } = useSearch();
 
   const searchCallback = useCallback(
     (query: string) => {
@@ -232,7 +232,7 @@ function TermSuggestions(props: {
   keywords: string[];
   searchCallback: (query: string) => void;
 }): React.ReactNode {
-  const { searchQuery } = useSearchBar();
+  const { searchQuery } = useSearch();
 
   return (
     <div className="flex w-full gap-1 overflow-x-auto rounded-3xl py-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-100 dark:scrollbar-thumb-slate-900">
