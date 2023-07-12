@@ -1,80 +1,27 @@
 import { type QueryDslQueryContainer } from "@elastic/elasticsearch/lib/api/types";
-import { CONTENT_FIELD } from "./types";
+import { CONTENT_FIELD, type MatchType } from "./types";
 
-const QUOTED_PHRASE = /"([^"]+)"/g;
-const NEGATED_PHRASE = /!"([^"]+)"/g;
-const NEGATED_WORD = /!([^ ]+)/g;
+type BoolClauses = QueryDslQueryContainer[];
 
 const trimMultipleWhitespaces = (s: string) => s.replaceAll(/\s+/g, " ").trim();
 
-/**
-Parses search options into Elasticsearch boolean query object
-
-For each following {query}, returns:
-
-"quoted phrases"            => must: { match_phrase: {query} }
-!"negated quoted phrases"   => must_not: { match_phrase: {query} }
-!negatedTerm                => must_not: { match: {query} }
-regularTerms                => should: { match: {query}}
+/**Extracts the tokens of a boolean match clause into string[]
+eg.:
+{clauses} must_not.match_phrase.[CONTENT_FIELD] = "must not match"
+{match}: "phrase" | "match_phrase"
 */
-export function buildBooleanQuery(
-  input: string,
-  field: string = CONTENT_FIELD
-) {
-  return booleanQueryConstraints(inputToQueryTokens(input), field);
+export function extractMatchTokens(clauses: BoolClauses, match: MatchType) {
+  const removeDuplicates = (array: string[]) => [...new Set(array)];
+  return removeDuplicates(
+    clauses
+      .map((clause) =>
+        clause[match]?.[CONTENT_FIELD]?.toString().replaceAll(/"|!/g, "")
+      )
+      .filter((token) => !!token) as string[]
+  );
 }
 
-/** Parses search options into Elasticsearch boolean query object */
-function booleanQueryConstraints(
-  options: ReturnType<typeof inputToQueryTokens>,
-  field: string
-) {
-  const { terms, negatedTerms, quotedPhrases, negatedQuotedPhrases } = options;
-
-  const should = [] as QueryDslQueryContainer[];
-  const must = [] as QueryDslQueryContainer[];
-  const must_not = [] as QueryDslQueryContainer[];
-
-  const toFieldObject = (s: string) => ({ [field]: s });
-  const toMatch = (s: string) => ({ match: toFieldObject(s) });
-  const toMatchPhrase = (s: string) => ({ match_phrase: toFieldObject(s) });
-
-  if (terms.length) {
-    should.push(toMatch(terms));
-  }
-
-  must.push(...quotedPhrases.map(toMatchPhrase));
-  must_not.push(...negatedTerms.map(toMatch));
-  must_not.push(...negatedQuotedPhrases.map(toMatchPhrase));
-
-  return { must, must_not, should, terms };
-}
-
-/** Parses input string into an search match options object
-eg: "quotes" into match_phrase objects
-eg: !negation into NOT match word 
-eg: !"some phrase" into NOT match phrase */
-function inputToQueryTokens(input: string) {
-  let terms = input;
-
-  const negatedQuotedPhrases = input.match(NEGATED_PHRASE);
-  terms = stripRegexMatchesFromString(terms, negatedQuotedPhrases);
-
-  const quotedPhrases = terms.match(QUOTED_PHRASE);
-  terms = stripRegexMatchesFromString(terms, quotedPhrases);
-
-  const negatedTerms = terms.match(NEGATED_WORD);
-  terms = stripRegexMatchesFromString(terms, negatedTerms);
-
-  return {
-    terms: terms,
-    negatedTerms: negatedTerms || [],
-    quotedPhrases: quotedPhrases || [],
-    negatedQuotedPhrases: negatedQuotedPhrases || [],
-  };
-}
-
-function stripRegexMatchesFromString(
+export function stripRegexMatchesFromString(
   text: string,
   matches: RegExpMatchArray | null
 ) {

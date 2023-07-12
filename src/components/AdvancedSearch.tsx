@@ -1,4 +1,8 @@
+import { useMemo } from "react";
+
+import { useSearch } from "@/store/search";
 import { cn } from "@/lib/utils";
+import { MatchType, extractMatchTokens } from "@/lib/search";
 
 import {
   Sheet,
@@ -12,18 +16,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 import { HeroIcon } from "@/components/HeroIcon";
-import { useSearch } from "@/store/search";
-import { useMemo } from "react";
-import { CONTENT_FIELD, buildBooleanQuery } from "@/lib/search";
-import { type QueryDslQueryContainer } from "@elastic/elasticsearch/lib/api/types";
-
-type Clauses = QueryDslQueryContainer[];
-
-enum MatchField {
-  Term = "match",
-  Phrase = "match_phrase",
-}
+import { buildBooleanQuery } from "@/lib/search/booleanQuery";
 
 export function AdvancedSearch({ className }: { className?: string }) {
   return (
@@ -39,7 +34,12 @@ export function AdvancedSearch({ className }: { className?: string }) {
 
         <Separator />
 
+        <SheetDescription>Resulting documents:</SheetDescription>
         <SearchForm />
+
+        <Button variant="secondary" className="mx-auto w-1/2">
+          Search
+        </Button>
       </SheetContent>
     </Sheet>
   );
@@ -54,13 +54,11 @@ function SearchForm() {
 
       return {
         shouldTerms: terms,
-        mustPhrases: extractMatchStrings(must, MatchField.Phrase),
-        mustNotTerms: extractMatchStrings(must_not, MatchField.Term),
-        mustNotPhrases: extractMatchStrings(must_not, MatchField.Phrase),
+        mustPhrases: extractMatchTokens(must, MatchType.Phrase),
+        mustNotTerms: extractMatchTokens(must_not, MatchType.Term),
+        mustNotPhrases: extractMatchTokens(must_not, MatchType.Phrase),
       };
     }, [searchQuery]);
-
-  console.log({ shouldTerms, mustPhrases, mustNotTerms, mustNotPhrases });
 
   const toCsv = (tokens: string[]) => {
     return tokens
@@ -103,7 +101,7 @@ function SearchForm() {
           <Input defaultValue={toCsv(mustNotPhrases)} />
         </div>
       </div>
-      <SheetDescription>Phrases are comma separated</SheetDescription>
+      <SheetDescription>Phrases must be comma separated</SheetDescription>
     </section>
   );
 }
@@ -115,12 +113,4 @@ function TriggerButton({ className }: { className?: string }) {
       className={cn(className, "text-active dark:text-active-dark")}
     />
   );
-}
-
-function extractMatchStrings(clauses: Clauses, field: MatchField) {
-  return clauses
-    .map((clause) =>
-      clause[field]?.[CONTENT_FIELD]?.toString().replaceAll(/"|!/g, "")
-    )
-    .filter((clause) => !!clause) as string[];
 }

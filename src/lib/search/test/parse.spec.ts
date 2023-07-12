@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { buildBooleanQuery } from "../parse";
 import { CONTENT_FIELD } from "../types";
+import { buildBooleanQuery } from "../booleanQuery";
 
 describe("buildBooleanQueryDsl", () => {
   it("should build boolean query with multiple conditions", () => {

@@ -24,6 +24,11 @@ export interface DidYouMeanSuggestion {
   collate_match?: boolean | undefined;
 }
 
+export enum MatchType {
+  Term = "match",
+  Phrase = "match_phrase",
+}
+
 export const SEARCH_RESULTS_SIZE = 10;
 export const INDEX = "wikipedia";
 export const CONTENT_FIELD = "content";

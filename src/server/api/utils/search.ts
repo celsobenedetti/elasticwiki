@@ -1,18 +1,19 @@
 import {
+  type QueryDslTextQueryType,
+  type SearchRequest,
+  type SearchSuggest,
+  type SearchTermSuggestOption,
+} from "@elastic/elasticsearch/lib/api/types";
+
+import {
   type WikiDocument,
   INDEX,
   POST_TAG,
   PRE_TAG,
   SEARCH_RESULTS_SIZE,
   TITLE_FIELD,
-  buildBooleanQuery,
 } from "@/lib/search";
-import {
-  type QueryDslTextQueryType,
-  type SearchRequest,
-  type SearchSuggest,
-  type SearchTermSuggestOption,
-} from "@elastic/elasticsearch/lib/api/types";
+import { buildBooleanQuery } from "@/lib/search/booleanQuery";
 
 export function buildInfiniteSearchRequest(
   cursor: number,
