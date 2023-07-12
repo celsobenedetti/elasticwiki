@@ -22,11 +22,11 @@ interface Props {
   setQuery: (query: string) => void;
   searchCallback: (query: string) => void;
   showIcons?: boolean;
-  showInfo?: boolean;
+  isHome?: boolean;
 }
 
 export default function SearchBar(props: Props) {
-  const { query, setQuery, searchCallback, showIcons, showInfo } = props;
+  const { query, setQuery, searchCallback, showIcons, isHome } = props;
   const [isFocused, setFocus] = useState(false);
 
   const { data, isFetching: isFetchingSuggestions } =
@@ -83,7 +83,7 @@ export default function SearchBar(props: Props) {
         <CommandSuggestions />
       </Command>
 
-      {showInfo && <InfoPopover />}
+      {isHome && <InfoPopover />}
     </div>
   );
 
