@@ -5,6 +5,8 @@ const QUOTED_PHRASE = /"([^"]+)"/g;
 const NEGATED_PHRASE = /!"([^"]+)"/g;
 const NEGATED_WORD = /!([^ ]+)/g;
 
+const trimMultipleWhitespaces = (s: string) => s.replaceAll(/\s+/g, " ").trim();
+
 /**
 Parses search options into Elasticsearch boolean query object
 
@@ -81,5 +83,5 @@ function stripRegexMatchesFromString(
     output = output.replaceAll(match, "");
   }
 
-  return output.replaceAll(/\s+/g, " ").trim(); //replace multiple whitespaces
+  return trimMultipleWhitespaces(output);
 }
