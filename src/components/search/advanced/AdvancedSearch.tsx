@@ -33,7 +33,6 @@ export function AdvancedSearch({
 }) {
   const router = useRouter();
   const { setSearchQuery } = useSearch();
-  //TODO: dispatch form input events
 
   const [inputs, dispatch] = useReducer(
     formStateReducer,

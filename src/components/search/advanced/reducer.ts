@@ -1,6 +1,7 @@
 import {
   extractMatchClauseTokens,
   MatchType,
+  stripPunctuations,
   trimMultipleWhitespaces,
 } from "@/lib/search";
 import { buildBooleanQuery } from "@/lib/search/booleanQuery";
@@ -34,9 +35,8 @@ const tokensToSeparatedValues = (tokens: string[]) => {
 export function parseQueryToInputstate(query: string): InputState {
   const { terms, must, must_not } = buildBooleanQuery(query);
 
-  // TODO: remove commas from query
   return {
-    shouldTerms: terms,
+    shouldTerms: stripPunctuations(terms),
     mustPhrases: tokensToSeparatedValues(
       extractMatchClauseTokens(must, MatchType.Phrase)
     ),

@@ -6,6 +6,8 @@ type BoolClauses = QueryDslQueryContainer[];
 export const trimMultipleWhitespaces = (s: string) =>
   s.replaceAll(/\s+/g, " ").trim();
 
+export const stripPunctuations = (s: string) => s.replaceAll(/"|!|,/g, "");
+
 /**Extracts the tokens of a boolean match clause into string[]
 eg.:
 {clauses} must_not.match_phrase.[CONTENT_FIELD] = "must not match"
@@ -19,9 +21,9 @@ export function extractMatchClauseTokens(
   return removeDuplicates(
     clauses
       .map((clause) =>
-        clause[match]?.[CONTENT_FIELD]?.toString().replaceAll(/"|!/g, "")
+        stripPunctuations(clause[match]?.[CONTENT_FIELD]?.toString() || "")
       )
-      .filter((token) => !!token) as string[]
+      .filter((token) => !!token)
   );
 }
 
