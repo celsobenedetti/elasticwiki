@@ -4,7 +4,7 @@
 
 @layer utilities {
   .search-highlights > em {
-    /* search jesults highlight tags */
+    /* search results highlight tags */
     @apply rounded bg-indigo-100  px-[2px] not-italic dark:bg-indigo-900;
   }
 
