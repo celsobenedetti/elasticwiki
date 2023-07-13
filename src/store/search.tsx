@@ -8,6 +8,6 @@ interface SearchStore {
 export const useSearch = create<SearchStore>((set) => ({
   searchQuery: "",
   setSearchQuery: (query: string) => {
-    if (query) set({ searchQuery: query });
+    set({ searchQuery: query });
   },
 }));
