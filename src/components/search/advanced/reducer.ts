@@ -1,4 +1,8 @@
-import { extractMatchClauseTokens, MatchType } from "@/lib/search";
+import {
+  extractMatchClauseTokens,
+  MatchType,
+  trimMultipleWhitespaces,
+} from "@/lib/search";
 import { buildBooleanQuery } from "@/lib/search/booleanQuery";
 
 export type InputState = {
@@ -8,19 +12,19 @@ export type InputState = {
   mustNotPhrases: string;
 };
 
-export type InputAction = {
-  type: InputType;
-  content: string;
-};
-
-enum InputType {
+export enum InputType {
   ShouldTerms = 0,
   MustPhrases,
   MustNotTerms,
   MustNotPhrases,
 }
 
-const tokensToCsv = (tokens: string[]) => {
+export type InputAction = {
+  type: InputType;
+  content: string;
+};
+
+const tokensToSeparatedValues = (tokens: string[]) => {
   return tokens
     .reduce((csv, token) => csv + ", " + token, "")
     .slice(1)
@@ -30,13 +34,16 @@ const tokensToCsv = (tokens: string[]) => {
 export function parseQueryToInputstate(query: string): InputState {
   const { terms, must, must_not } = buildBooleanQuery(query);
 
+  // TODO: remove commas from query
   return {
     shouldTerms: terms,
-    mustPhrases: tokensToCsv(extractMatchClauseTokens(must, MatchType.Phrase)),
-    mustNotTerms: tokensToCsv(
+    mustPhrases: tokensToSeparatedValues(
+      extractMatchClauseTokens(must, MatchType.Phrase)
+    ),
+    mustNotTerms: tokensToSeparatedValues(
       extractMatchClauseTokens(must_not, MatchType.Term)
     ),
-    mustNotPhrases: tokensToCsv(
+    mustNotPhrases: tokensToSeparatedValues(
       extractMatchClauseTokens(must_not, MatchType.Phrase)
     ),
   };
@@ -75,4 +82,17 @@ export function inputReducer(
       };
     }
   }
+}
+
+export function buildQuery(input: InputState) {
+  let result = input.shouldTerms + " ";
+  if (!!input.mustPhrases.length)
+    result += input.mustPhrases.split(",").map((phrase) => `"${phrase}" `);
+
+  if (!!input.mustNotTerms.length)
+    result += input.mustNotTerms.split(" ").map((term) => `!${term} `);
+
+  if (!!input.mustNotPhrases.length)
+    result += input.mustNotPhrases.split(",").map((phrase) => `!"${phrase}" `);
+  return trimMultipleWhitespaces(result).replaceAll(",", "");
 }

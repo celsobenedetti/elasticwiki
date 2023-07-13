@@ -1,6 +1,6 @@
 import { useSearch } from "@/store/search";
 import { Button } from "@/components/ui/button";
-import { useCallback } from "react";
+import { memo, useCallback, useState } from "react";
 import { useRouter } from "next/router";
 import SearchBar from "@/components/search/SearchBar";
 
@@ -23,13 +23,14 @@ export default function Home() {
 function Search() {
   const router = useRouter();
 
-  const { searchQuery, setSearchQuery } = useSearch();
+  const [query, setQuery] = useState("");
+  const MemoizedAdvancedSearch = memo(AdvancedSearch);
 
   const searchCallback = useCallback(
     (searchQuery: string) => {
       if (!searchQuery) return;
 
-      setSearchQuery(searchQuery);
+      setQuery(searchQuery);
       router
         .push({
           pathname: "/search",
@@ -37,29 +38,29 @@ function Search() {
         })
         .catch(console.error);
     },
-    [router, setSearchQuery]
+    [router, setQuery]
   );
 
   return (
     <section className="relative mb-20 flex w-10/12 max-w-sm flex-col items-center gap-6 overflow-visible sm:max-w-[36rem]">
       <SearchBar
         searchCallback={searchCallback}
-        query={searchQuery}
-        setQuery={setSearchQuery}
-        showIcons={!!searchQuery.length}
+        query={query}
+        setQuery={setQuery}
+        showIcons={!!query.length}
         isHome={true}
       />
 
       <div className="mt-20 flex items-center justify-center gap-3">
         <Button
-          onClick={() => searchCallback(searchQuery)}
+          onClick={() => searchCallback(query)}
           variant="secondary"
           className="w-40"
         >
           Search
         </Button>
 
-        <AdvancedSearch />
+        <MemoizedAdvancedSearch searchQuery={query} />
       </div>
     </section>
   );

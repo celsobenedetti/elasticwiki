@@ -3,7 +3,8 @@ import { CONTENT_FIELD, type MatchType } from "./types";
 
 type BoolClauses = QueryDslQueryContainer[];
 
-const trimMultipleWhitespaces = (s: string) => s.replaceAll(/\s+/g, " ").trim();
+export const trimMultipleWhitespaces = (s: string) =>
+  s.replaceAll(/\s+/g, " ").trim();
 
 /**Extracts the tokens of a boolean match clause into string[]
 eg.:
