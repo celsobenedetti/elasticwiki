@@ -1,11 +1,16 @@
 import { extractMatchClauseTokens, MatchType } from "@/lib/search";
 import { buildBooleanQuery } from "@/lib/search/booleanQuery";
 
-type InputFields = {
+export type InputState = {
   shouldTerms: string;
   mustPhrases: string;
   mustNotTerms: string;
   mustNotPhrases: string;
+};
+
+export type InputAction = {
+  type: InputType;
+  content: string;
 };
 
 enum InputType {
@@ -15,11 +20,6 @@ enum InputType {
   MustNotPhrases,
 }
 
-type InputEvent = {
-  type: InputType;
-  content: string;
-};
-
 const tokensToCsv = (tokens: string[]) => {
   return tokens
     .reduce((csv, token) => csv + ", " + token, "")
@@ -27,7 +27,7 @@ const tokensToCsv = (tokens: string[]) => {
     .trim();
 };
 
-export function createInitialInputState(query: string): InputFields {
+export function parseQueryToInputstate(query: string): InputState {
   const { terms, must, must_not } = buildBooleanQuery(query);
 
   return {
@@ -43,24 +43,36 @@ export function createInitialInputState(query: string): InputFields {
 }
 
 export function inputReducer(
-  fields: InputFields,
-  inputEvent: InputEvent
-): InputFields {
-  switch (inputEvent.type) {
+  fields: InputState,
+  action: InputAction
+): InputState {
+  switch (action.type) {
+    case InputType.ShouldTerms: {
+      return {
+        ...fields,
+        shouldTerms: action.content,
+      };
+    }
+
     case InputType.MustPhrases: {
       return {
         ...fields,
-        mustPhrases: inputEvent.content,
+        mustPhrases: action.content,
+      };
+    }
+
+    case InputType.MustNotTerms: {
+      return {
+        ...fields,
+        mustNotTerms: action.content,
+      };
+    }
+
+    case InputType.MustNotPhrases: {
+      return {
+        ...fields,
+        mustNotPhrases: action.content,
       };
     }
   }
-
-  //TODO: Handle form input events
-
-  return {
-    shouldTerms: "",
-    mustPhrases: "",
-    mustNotTerms: "",
-    mustNotPhrases: "",
-  };
 }

@@ -1,24 +1,18 @@
-import { Label } from "@radix-ui/react-label";
-import { useReducer } from "react";
-
-import { useSearch } from "@/store/search";
+import { type Dispatch } from "react";
 
 import { SheetDescription } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
-import {
-  inputReducer as formStateReducer,
-  createInitialInputState,
-} from "./reducer";
+import { Label } from "@/components/ui/label";
 
-export default function SearchForm() {
-  const { searchQuery } = useSearch();
+import { type InputState, type InputAction } from "./reducer";
 
-  //TODO: dispatch form input events
-  const [inputs, inputEvent] = useReducer(
-    formStateReducer,
-    createInitialInputState(searchQuery)
-  );
-
+export default function SearchForm({
+  inputs,
+  dispatch,
+}: {
+  inputs: InputState;
+  dispatch: Dispatch<InputAction>;
+}) {
   return (
     <section className="flex w-full flex-col gap-4 rounded-lg">
       <div className="border-l border-l-green-500 pl-2">
