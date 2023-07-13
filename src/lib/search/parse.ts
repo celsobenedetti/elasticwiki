@@ -10,7 +10,10 @@ eg.:
 {clauses} must_not.match_phrase.[CONTENT_FIELD] = "must not match"
 {match}: "phrase" | "match_phrase"
 */
-export function extractMatchTokens(clauses: BoolClauses, match: MatchType) {
+export function extractMatchClauseTokens(
+  clauses: BoolClauses,
+  match: MatchType
+) {
   const removeDuplicates = (array: string[]) => [...new Set(array)];
   return removeDuplicates(
     clauses
