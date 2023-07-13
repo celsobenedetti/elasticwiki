@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useReducer } from "react";
 
 import { useSearch } from "@/store/search";
 import { cn } from "@/lib/utils";
@@ -45,20 +45,45 @@ export function AdvancedSearch({ className }: { className?: string }) {
   );
 }
 
+function createInitialInputs(query: string) {
+  const { terms, must, must_not } = buildBooleanQuery(query);
+
+  return {
+    shouldTerms: terms,
+    mustPhrases: extractMatchTokens(must, MatchType.Phrase),
+    mustNotTerms: extractMatchTokens(must_not, MatchType.Term),
+    mustNotPhrases: extractMatchTokens(must_not, MatchType.Phrase),
+  };
+}
+
+type InputFields = {
+  shouldTerms: string;
+  mustPhrases: string[];
+  mustNotTerms: string[];
+  mustNotPhrases: string[];
+};
+
+type FormEvent = {
+  type: "";
+  fields: InputFields;
+};
+
+function inputReducer(inputs: InputFields, action: FormEvent): InputFields {
+  return {
+    shouldTerms: "",
+    mustPhrases: [""],
+    mustNotTerms: [""],
+    mustNotPhrases: [""],
+  };
+}
+
 function SearchForm() {
   const { searchQuery } = useSearch();
 
-  const { shouldTerms, mustPhrases, mustNotTerms, mustNotPhrases } =
-    useMemo(() => {
-      const { terms, must, must_not } = buildBooleanQuery(searchQuery);
-
-      return {
-        shouldTerms: terms,
-        mustPhrases: extractMatchTokens(must, MatchType.Phrase),
-        mustNotTerms: extractMatchTokens(must_not, MatchType.Term),
-        mustNotPhrases: extractMatchTokens(must_not, MatchType.Phrase),
-      };
-    }, [searchQuery]);
+  const [inputs, dispatch] = useReducer(
+    inputReducer,
+    createInitialInputs(searchQuery)
+  );
 
   const toCsv = (tokens: string[]) => {
     return tokens
@@ -75,14 +100,14 @@ function SearchForm() {
             <span className=" text-green-500">should</span> match{" "}
             <span className="font-bold">terms</span>:
           </Label>
-          <Input defaultValue={shouldTerms} />
+          <Input defaultValue={inputs.shouldTerms} />
         </div>
         <div>
           <Label htmlFor="phrases">
             <span className="text-green-500">must</span> match{" "}
             <span className="font-bold">phrases</span>:
           </Label>
-          <Input defaultValue={toCsv(mustPhrases)} />
+          <Input defaultValue={toCsv(inputs.mustPhrases)} />
         </div>
       </div>
       <div className="border-l border-l-red-500 pl-2">
@@ -91,14 +116,14 @@ function SearchForm() {
             <span className="text-red-400">must not</span> match{" "}
             <span className="font-bold">terms</span>:
           </Label>
-          <Input defaultValue={toCsv(mustNotTerms)} />
+          <Input defaultValue={toCsv(inputs.mustNotTerms)} />
         </div>
         <div>
           <Label htmlFor="phrases">
             <span className="text-red-400">must not</span> match{" "}
             <span className="font-bold">phrases</span>:
           </Label>
-          <Input defaultValue={toCsv(mustNotPhrases)} />
+          <Input defaultValue={toCsv(inputs.mustNotPhrases)} />
         </div>
       </div>
       <SheetDescription>Phrases must be comma separated</SheetDescription>

@@ -12,10 +12,10 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 
-import { HeroIcon } from "./HeroIcon";
-import LoadingSpinner from "./LoadingSpinner";
-import { HighlightedText } from "./ParsedHighlightedText";
-import InfoPopover from "./InfoPopover";
+import { HeroIcon } from "@/components/HeroIcon";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import { HighlightedText } from "@/components/ParsedHighlightedText";
+import InfoPopover from "@/components/InfoPopover";
 
 interface Props {
   query: string;

@@ -2,9 +2,9 @@ import { useSearch } from "@/store/search";
 import { Button } from "@/components/ui/button";
 import { useCallback } from "react";
 import { useRouter } from "next/router";
-import SearchBar from "@/components/SearchBar";
+import SearchBar from "@/components/search/SearchBar";
 
-import { AdvancedSearch } from "@/components/AdvancedSearch";
+import { AdvancedSearch } from "@/components/search/advanced/AdvancedSearch";
 
 export default function Home() {
   return (

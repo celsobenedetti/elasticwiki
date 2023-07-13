@@ -2,7 +2,7 @@ import { useTheme } from "@/store/theme";
 import { Button } from "./ui/button";
 import { HeroIcon, type SVGShape } from "./HeroIcon";
 import { useRouter } from "next/router";
-import SearchBar from "./SearchBar";
+import SearchBar from "@/components/search/SearchBar";
 import { useCallback, useEffect, useState } from "react";
 import { useSearch } from "@/store/search";
 import Image from "next/image";
