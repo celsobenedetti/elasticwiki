@@ -1,4 +1,5 @@
 import { useCallback, useReducer } from "react";
+import { useRouter } from "next/router";
 
 import { cn } from "@/lib/utils";
 
@@ -18,11 +19,10 @@ import { Separator } from "@/components/ui/separator";
 import {
   buildQuery,
   inputReducer as formStateReducer,
-  parseQueryToInputstate,
-} from "./reducer";
+  buildInitialState,
+} from "./state";
 import SearchForm from "./form";
 import { useSearch } from "@/store/search";
-import { useRouter } from "next/router";
 
 export function AdvancedSearch({
   searchQuery: query,
@@ -34,9 +34,9 @@ export function AdvancedSearch({
   const router = useRouter();
   const { setSearchQuery } = useSearch();
 
-  const [inputs, dispatch] = useReducer(
+  const [searchState, dispatch] = useReducer(
     formStateReducer,
-    parseQueryToInputstate(query)
+    buildInitialState(query)
   );
 
   const searchCallback = useCallback(
@@ -68,10 +68,10 @@ export function AdvancedSearch({
         <Separator />
 
         <SheetDescription>Resulting documents:</SheetDescription>
-        <SearchForm inputs={inputs} dispatch={dispatch} />
+        <SearchForm inputFields={searchState.inputFields} dispatch={dispatch} />
 
         <Button
-          onClick={() => searchCallback(buildQuery(inputs))}
+          onClick={() => searchCallback(buildQuery(searchState.inputFields))}
           variant="secondary"
           className="mx-auto w-1/2"
         >

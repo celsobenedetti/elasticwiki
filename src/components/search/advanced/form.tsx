@@ -4,13 +4,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SheetDescription } from "@/components/ui/sheet";
 
-import { InputType, type InputAction, type InputState } from "./reducer";
+import { InputType, type InputAction, type InputState } from "./state";
 
 export default function SearchForm({
-  inputs,
+  inputFields,
   dispatch,
 }: {
-  inputs: InputState;
+  inputFields: InputState;
   dispatch: Dispatch<InputAction>;
 }) {
   return (
@@ -22,7 +22,7 @@ export default function SearchForm({
             <span className="font-bold">terms</span>:
           </Label>
           <Input
-            defaultValue={inputs.shouldTerms}
+            defaultValue={inputFields.get(InputType.ShouldTerms)}
             onChange={(e) =>
               dispatch({ type: InputType.ShouldTerms, content: e.target.value })
             }
@@ -34,7 +34,7 @@ export default function SearchForm({
             <span className="font-bold">phrases</span>:
           </Label>
           <Input
-            defaultValue={inputs.mustPhrases}
+            defaultValue={inputFields.get(InputType.MustPhrases)}
             onChange={(e) =>
               dispatch({ type: InputType.MustPhrases, content: e.target.value })
             }
@@ -48,7 +48,7 @@ export default function SearchForm({
             <span className="font-bold">terms</span>:
           </Label>
           <Input
-            defaultValue={inputs.mustNotTerms}
+            defaultValue={inputFields.get(InputType.MustNotTerms)}
             onChange={(e) =>
               dispatch({
                 type: InputType.MustNotTerms,
@@ -63,7 +63,7 @@ export default function SearchForm({
             <span className="font-bold">phrases</span>:
           </Label>
           <Input
-            defaultValue={inputs.mustNotPhrases}
+            defaultValue={inputFields.get(InputType.MustNotPhrases)}
             onChange={(e) =>
               dispatch({
                 type: InputType.MustNotPhrases,
