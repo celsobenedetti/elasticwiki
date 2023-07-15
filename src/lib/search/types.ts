@@ -33,3 +33,7 @@ export const SEARCH_RESULTS_SIZE = 10;
 export const INDEX = "wikipedia";
 export const CONTENT_FIELD = "content";
 export const TITLE_FIELD = "title";
+
+export const CREATED_BEFORE = "before";
+export const CREATED_AFTER = "after";
+export type DateType = typeof CREATED_BEFORE | typeof CREATED_AFTER;

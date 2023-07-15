@@ -1,6 +1,8 @@
-import { useCallback, useReducer } from "react";
+import { useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 
+import { useSearch } from "@/store/search";
+import { CREATED_AFTER, CREATED_BEFORE } from "@/lib/search";
 import { cn } from "@/lib/utils";
 
 import {
@@ -16,32 +18,25 @@ import { HeroIcon } from "@/components/HeroIcon";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
-import {
-  buildQuery,
-  searchStateReducer,
-  buildInitialState,
-  DateField,
-} from "./state";
-import SearchForm from "./form";
-import { useSearch } from "@/store/search";
-import { DatePicker } from "./DatePicker";
+import { DatePicker } from "./Date";
+import SearchForm from "./Form";
+import { buildQueryFromState, parseQueryToTextFieldsState } from "./state";
 
 export function AdvancedSearch({
-  searchQuery: query,
+  searchQuery,
   className,
 }: {
   searchQuery: string;
   className?: string;
 }) {
-  const router = useRouter();
-  const { setSearchQuery } = useSearch();
+  const { setSearchQuery, textFields, setInitialTextFields } = useSearch();
 
-  const [searchState, dispatch] = useReducer(
-    searchStateReducer,
-    buildInitialState(query)
+  useEffect(
+    () => setInitialTextFields(parseQueryToTextFieldsState(searchQuery)),
+    [searchQuery, setInitialTextFields]
   );
-  console.log({ dates: searchState.dates });
 
+  const router = useRouter();
   const searchCallback = useCallback(
     (searchQuery: string) => {
       if (!searchQuery) return;
@@ -71,23 +66,15 @@ export function AdvancedSearch({
         <Separator />
 
         <SheetDescription>Resulting documents:</SheetDescription>
-        <SearchForm inputFields={searchState.textFields} dispatch={dispatch} />
+        <SearchForm />
 
         <Separator />
 
-        <DatePicker
-          dateField={DateField.Before}
-          date={searchState.dates.before}
-          dispatch={dispatch}
-        />
-        <DatePicker
-          dateField={DateField.After}
-          date={searchState.dates.after}
-          dispatch={dispatch}
-        />
+        <DatePicker DATE_TYPE={CREATED_BEFORE} />
+        <DatePicker DATE_TYPE={CREATED_AFTER} />
 
         <Button
-          onClick={() => searchCallback(buildQuery(searchState.textFields))}
+          onClick={() => searchCallback(buildQueryFromState(textFields))}
           variant="secondary"
           className="mx-auto w-1/2"
         >

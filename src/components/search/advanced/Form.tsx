@@ -1,18 +1,13 @@
-import { type Dispatch } from "react";
+import { useSearch } from "@/store/search";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SheetDescription } from "@/components/ui/sheet";
 
-import { TextField, type InputAction, type TextFieldsState } from "./state";
+import { TextField } from "./types";
 
-export default function SearchForm({
-  inputFields,
-  dispatch,
-}: {
-  inputFields: TextFieldsState;
-  dispatch: Dispatch<InputAction>;
-}) {
+export default function SearchForm() {
+  const { textFields, setTextField } = useSearch();
   return (
     <section className="flex w-full flex-col gap-4 rounded-lg">
       <div className="border-l border-l-green-500 pl-2">
@@ -22,9 +17,9 @@ export default function SearchForm({
             <span className="font-bold">terms</span>:
           </Label>
           <Input
-            defaultValue={inputFields.get(TextField.ShouldTerms)}
+            defaultValue={textFields.get(TextField.ShouldTerms)}
             onChange={(e) =>
-              dispatch({ type: TextField.ShouldTerms, content: e.target.value })
+              setTextField(TextField.ShouldTerms, e.target.value)
             }
           />
         </div>
@@ -34,9 +29,9 @@ export default function SearchForm({
             <span className="font-bold">phrases</span>:
           </Label>
           <Input
-            defaultValue={inputFields.get(TextField.MustPhrases)}
+            defaultValue={textFields.get(TextField.MustPhrases)}
             onChange={(e) =>
-              dispatch({ type: TextField.MustPhrases, content: e.target.value })
+              setTextField(TextField.MustPhrases, e.target.value)
             }
           />
         </div>
@@ -48,12 +43,9 @@ export default function SearchForm({
             <span className="font-bold">terms</span>:
           </Label>
           <Input
-            defaultValue={inputFields.get(TextField.MustNotTerms)}
+            defaultValue={textFields.get(TextField.MustNotTerms)}
             onChange={(e) =>
-              dispatch({
-                type: TextField.MustNotTerms,
-                content: e.target.value,
-              })
+              setTextField(TextField.MustNotTerms, e.target.value)
             }
           />
         </div>
@@ -63,12 +55,9 @@ export default function SearchForm({
             <span className="font-bold">phrases</span>:
           </Label>
           <Input
-            defaultValue={inputFields.get(TextField.MustNotPhrases)}
+            defaultValue={textFields.get(TextField.MustNotPhrases)}
             onChange={(e) =>
-              dispatch({
-                type: TextField.MustNotPhrases,
-                content: e.target.value,
-              })
+              setTextField(TextField.MustNotPhrases, e.target.value)
             }
           />
         </div>

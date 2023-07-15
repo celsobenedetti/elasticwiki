@@ -1,8 +1,9 @@
-import * as React from "react";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { CREATED_BEFORE, type DateType } from "@/lib/search";
+
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -11,20 +12,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { SheetDescription } from "@/components/ui/sheet";
+import { useSearch } from "@/store/search";
 
-import { DateField, type InputAction } from "./state";
-
-export function DatePicker({
-  dateField,
-  dispatch,
-}: {
-  dateField: DateField;
-  date: Date | undefined;
-  dispatch: React.Dispatch<InputAction>;
-}) {
-  const [date, setDate] = React.useState<Date>();
+export function DatePicker({ DATE_TYPE }: { DATE_TYPE: DateType }) {
   const title =
-    dateField == DateField.After ? "Created After" : "Created Before";
+    DATE_TYPE == CREATED_BEFORE ? "Created Before" : "Created After";
+
+  const { dates, setDate } = useSearch();
+  const date = dates[DATE_TYPE];
 
   return (
     <Popover>
@@ -48,9 +43,8 @@ export function DatePicker({
           mode="single"
           selected={date}
           onSelect={(d) => {
-            setDate(d);
-            if (d != undefined) {
-              dispatch({ type: dateField, content: d });
+            if (!!d) {
+              setDate(DATE_TYPE, d);
             }
           }}
           initialFocus
