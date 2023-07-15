@@ -4,13 +4,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SheetDescription } from "@/components/ui/sheet";
 
-import { InputType, type InputAction, type InputState } from "./state";
+import { TextField, type InputAction, type TextFieldsState } from "./state";
 
 export default function SearchForm({
   inputFields,
   dispatch,
 }: {
-  inputFields: InputState;
+  inputFields: TextFieldsState;
   dispatch: Dispatch<InputAction>;
 }) {
   return (
@@ -22,9 +22,9 @@ export default function SearchForm({
             <span className="font-bold">terms</span>:
           </Label>
           <Input
-            defaultValue={inputFields.get(InputType.ShouldTerms)}
+            defaultValue={inputFields.get(TextField.ShouldTerms)}
             onChange={(e) =>
-              dispatch({ type: InputType.ShouldTerms, content: e.target.value })
+              dispatch({ type: TextField.ShouldTerms, content: e.target.value })
             }
           />
         </div>
@@ -34,9 +34,9 @@ export default function SearchForm({
             <span className="font-bold">phrases</span>:
           </Label>
           <Input
-            defaultValue={inputFields.get(InputType.MustPhrases)}
+            defaultValue={inputFields.get(TextField.MustPhrases)}
             onChange={(e) =>
-              dispatch({ type: InputType.MustPhrases, content: e.target.value })
+              dispatch({ type: TextField.MustPhrases, content: e.target.value })
             }
           />
         </div>
@@ -48,10 +48,10 @@ export default function SearchForm({
             <span className="font-bold">terms</span>:
           </Label>
           <Input
-            defaultValue={inputFields.get(InputType.MustNotTerms)}
+            defaultValue={inputFields.get(TextField.MustNotTerms)}
             onChange={(e) =>
               dispatch({
-                type: InputType.MustNotTerms,
+                type: TextField.MustNotTerms,
                 content: e.target.value,
               })
             }
@@ -63,10 +63,10 @@ export default function SearchForm({
             <span className="font-bold">phrases</span>:
           </Label>
           <Input
-            defaultValue={inputFields.get(InputType.MustNotPhrases)}
+            defaultValue={inputFields.get(TextField.MustNotPhrases)}
             onChange={(e) =>
               dispatch({
-                type: InputType.MustNotPhrases,
+                type: TextField.MustNotPhrases,
                 content: e.target.value,
               })
             }

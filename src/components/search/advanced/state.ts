@@ -7,7 +7,7 @@ import {
 import { buildBooleanQuery } from "@/lib/search/booleanQuery";
 
 export type SearchState = {
-  inputFields: Map<InputType, string>;
+  textFields: Map<TextField, string>;
   dates: {
     before: Date | undefined;
     after: Date | undefined;
@@ -20,35 +20,35 @@ export type SearchState = {
 
 export function buildInitialState(query: string): SearchState {
   return {
-    inputFields: parseQueryToInputstate(query),
+    textFields: parseQueryToTextFieldsState(query),
     dates: { before: undefined, after: undefined },
     readTime: { lesser: undefined, greater: undefined },
   };
 }
 
-export type InputState = SearchState["inputFields"];
+export type TextFieldsState = SearchState["textFields"];
 
-export enum InputType {
+export enum TextField {
   ShouldTerms = 0,
   MustPhrases,
   MustNotTerms,
   MustNotPhrases,
 }
 
-export enum DateType {
-  Before = 0,
+export enum DateField {
+  Before = 100,
   After,
 }
 
-export enum ReadTime {
-  Lesser = 0,
+export enum ReadTimeField {
+  Lesser = 1000,
   Greater,
 }
 
 export type InputAction =
-  | { type: InputType; content: string }
-  | { type: DateType; content: Date }
-  | { type: ReadTime; content: number };
+  | { type: TextField; content: string }
+  | { type: DateField; content: Date }
+  | { type: ReadTimeField; content: number };
 
 const tokensToSeparatedValues = (tokens: string[]) => {
   return tokens
@@ -57,57 +57,54 @@ const tokensToSeparatedValues = (tokens: string[]) => {
     .trim();
 };
 
-function parseQueryToInputstate(query: string): InputState {
+function parseQueryToTextFieldsState(query: string): TextFieldsState {
   const { terms, must, must_not } = buildBooleanQuery(query);
-  const inputFields = new Map<InputType, string>();
+  const fields = new Map<TextField, string>();
 
-  inputFields.set(InputType.ShouldTerms, stripPunctuations(terms));
-  inputFields.set(
-    InputType.MustPhrases,
+  fields.set(TextField.ShouldTerms, stripPunctuations(terms));
+  fields.set(
+    TextField.MustPhrases,
     tokensToSeparatedValues(extractMatchClauseTokens(must, MatchType.Phrase))
   );
 
-  inputFields.set(
-    InputType.MustNotTerms,
+  fields.set(
+    TextField.MustNotTerms,
     tokensToSeparatedValues(extractMatchClauseTokens(must_not, MatchType.Term))
   );
 
-  inputFields.set(
-    InputType.MustNotPhrases,
+  fields.set(
+    TextField.MustNotPhrases,
     tokensToSeparatedValues(
       extractMatchClauseTokens(must_not, MatchType.Phrase)
     )
   );
-  return inputFields;
+  return fields;
 }
 
-export function inputReducer(
+export function searchStateReducer(
   state: SearchState,
   action: InputAction
 ): SearchState {
   switch (action.type) {
-    //handle all input fields with same logic
-    case InputType.ShouldTerms:
-    case InputType.MustNotTerms:
-    case InputType.MustPhrases:
-    case InputType.MustNotPhrases: {
+    //handle all text field changes with same logic
+    case TextField.ShouldTerms:
+    case TextField.MustNotTerms:
+    case TextField.MustPhrases:
+    case TextField.MustNotPhrases: {
       return {
         ...state,
-        inputFields: new Map(state.inputFields).set(
-          action.type,
-          action.content
-        ),
+        textFields: new Map(state.textFields).set(action.type, action.content),
       };
     }
 
     // TODO: Handle dates and readtimes
-    case DateType.Before: {
+    case DateField.Before: {
     }
-    case DateType.After: {
+    case DateField.After: {
     }
-    case ReadTime.Lesser: {
+    case ReadTimeField.Lesser: {
     }
-    case ReadTime.Greater: {
+    case ReadTimeField.Greater: {
     }
 
     default:
@@ -115,12 +112,12 @@ export function inputReducer(
   }
 }
 
-export function buildQuery(input: InputState) {
+export function buildQuery(fields: TextFieldsState) {
   let result = "";
-  const shouldTerms = input.get(InputType.ShouldTerms);
-  const mustPhrases = input.get(InputType.MustPhrases);
-  const mustNotTerms = input.get(InputType.MustNotTerms);
-  const mustNotPhrases = input.get(InputType.MustNotPhrases);
+  const shouldTerms = fields.get(TextField.ShouldTerms);
+  const mustPhrases = fields.get(TextField.MustPhrases);
+  const mustNotTerms = fields.get(TextField.MustNotTerms);
+  const mustNotPhrases = fields.get(TextField.MustNotPhrases);
 
   const toPhrase = (phrase: string) => `"${phrase}" `;
   const toNegatedTerm = (term: string) => `!${term} `;

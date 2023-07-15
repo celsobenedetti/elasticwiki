@@ -18,11 +18,13 @@ import { Separator } from "@/components/ui/separator";
 
 import {
   buildQuery,
-  inputReducer as formStateReducer,
+  searchStateReducer,
   buildInitialState,
+  DateField,
 } from "./state";
 import SearchForm from "./form";
 import { useSearch } from "@/store/search";
+import { DatePicker } from "./DatePicker";
 
 export function AdvancedSearch({
   searchQuery: query,
@@ -35,9 +37,10 @@ export function AdvancedSearch({
   const { setSearchQuery } = useSearch();
 
   const [searchState, dispatch] = useReducer(
-    formStateReducer,
+    searchStateReducer,
     buildInitialState(query)
   );
+  console.log({ dates: searchState.dates });
 
   const searchCallback = useCallback(
     (searchQuery: string) => {
@@ -68,10 +71,23 @@ export function AdvancedSearch({
         <Separator />
 
         <SheetDescription>Resulting documents:</SheetDescription>
-        <SearchForm inputFields={searchState.inputFields} dispatch={dispatch} />
+        <SearchForm inputFields={searchState.textFields} dispatch={dispatch} />
+
+        <Separator />
+
+        <DatePicker
+          dateField={DateField.Before}
+          date={searchState.dates.before}
+          dispatch={dispatch}
+        />
+        <DatePicker
+          dateField={DateField.After}
+          date={searchState.dates.after}
+          dispatch={dispatch}
+        />
 
         <Button
-          onClick={() => searchCallback(buildQuery(searchState.inputFields))}
+          onClick={() => searchCallback(buildQuery(searchState.textFields))}
           variant="secondary"
           className="mx-auto w-1/2"
         >
