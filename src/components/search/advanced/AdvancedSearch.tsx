@@ -58,7 +58,7 @@ export function AdvancedSearch({
         <TriggerButton className={className} />
       </SheetTrigger>
 
-      <SheetContent side="left" className="flex flex-col gap-4">
+      <SheetContent side="left" className="flex flex-col gap-4 overflow-y-auto">
         <SheetHeader>
           <SheetTitle>Advanced Search</SheetTitle>
         </SheetHeader>
