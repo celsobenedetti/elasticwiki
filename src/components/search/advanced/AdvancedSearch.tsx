@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 
+import { CREATED_BEFORE, CREATED_AFTER, LESSER, GREATER } from "@/lib/search";
 import { useSearch } from "@/store/search";
 import { cn } from "@/lib/utils";
 
@@ -19,7 +20,6 @@ import { Separator } from "@/components/ui/separator";
 import { DatePicker } from "./Date";
 import SearchForm from "./Form";
 import { buildQueryFromState, parseQueryToTextFieldsState } from "./state";
-import { CREATED_BEFORE, CREATED_AFTER, LESSER, GREATER } from "./types";
 import ReadTimeSlider from "./Slider";
 
 export function AdvancedSearch({

@@ -1,10 +1,9 @@
 import { useSearch } from "@/store/search";
+import { TextField } from "@/lib/search";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SheetDescription } from "@/components/ui/sheet";
-
-import { TextField } from "./types";
 
 export default function SearchForm() {
   const { textFields, setTextField } = useSearch();

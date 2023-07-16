@@ -1,11 +1,12 @@
 import {
+  type TextFieldsMap,
   extractMatchClauseTokens,
   MatchType,
   stripPunctuations,
+  TextField,
   trimMultipleWhitespaces,
 } from "@/lib/search";
 import { buildMatchClauses } from "@/lib/search/booleanQuery";
-import { type TextFieldsMap, TextField } from "./types";
 
 export function parseQueryToTextFieldsState(query: string): TextFieldsMap {
   const { terms, must, must_not } = buildMatchClauses(query);

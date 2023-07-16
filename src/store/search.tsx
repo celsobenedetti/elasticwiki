@@ -1,15 +1,14 @@
 import {
-  type TextField,
   type AdvancedSearchStore,
   type TextFieldsMap,
+  type TextField,
   type DateType,
   type ReadTimeType,
+  LESSER,
+  GREATER,
   CREATED_BEFORE,
   CREATED_AFTER,
-  GREATER,
-  LESSER,
-} from "@/components/search/advanced";
-
+} from "@/lib/search";
 import { create } from "zustand";
 
 interface SearchStore extends AdvancedSearchStore {

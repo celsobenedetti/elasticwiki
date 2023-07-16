@@ -1,9 +1,8 @@
 import { useSearch } from "@/store/search";
+import { type ReadTimeType } from "@/lib/search";
 
 import { SheetDescription } from "@/components/ui/sheet";
 import { Slider } from "@/components/ui/slider";
-
-import { type ReadTimeType } from "./types";
 
 export default function ReadTimeSlider({
   TIME_TYPE,

@@ -12,8 +12,7 @@ import {
 } from "@/components/ui/popover";
 import { SheetDescription } from "@/components/ui/sheet";
 import { useSearch } from "@/store/search";
-
-import { type DateType, CREATED_BEFORE } from "./types";
+import { type DateType, CREATED_BEFORE } from "@/lib/search";
 
 export function DatePicker({ DATE_TYPE }: { DATE_TYPE: DateType }) {
   const title =
