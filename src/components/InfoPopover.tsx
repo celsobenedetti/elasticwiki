@@ -9,7 +9,7 @@ import { HeroIcon } from "@/components/HeroIcon";
 export default function InfoPopover() {
   return (
     <Popover>
-      <PopoverTrigger className="absolute right-[-2rem] top-3 ">
+      <PopoverTrigger>
         <HeroIcon shape="info" className="text-slate-400 dark:text-active" />
       </PopoverTrigger>
       <PopoverContent className="flex w-80 flex-col gap-2 px-8 text-sm">

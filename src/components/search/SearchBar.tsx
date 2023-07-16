@@ -16,6 +16,7 @@ import { HeroIcon } from "@/components/HeroIcon";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { HighlightedText } from "@/components/ParsedHighlightedText";
 import InfoPopover from "@/components/InfoPopover";
+import { AdvancedSearch } from "./advanced";
 
 interface Props {
   query: string;
@@ -48,42 +49,49 @@ export default function SearchBar(props: Props) {
   const showSuggestions = !!suggestions && suggestions.length && isFocused;
 
   return (
-    <div
-      className={`absolute w-full overflow-visible border dark:border-slate-700 ${
-        showSuggestions ? "rounded-b-3xl rounded-t-3xl shadow" : "rounded-full "
-      }`}
-    >
-      <Command
-        className="rounded-3xl hover:shadow"
-        shouldFilter={false}
-        loop={true}
+    <div className="flex h-11 w-[calc(100%+1rem)] items-center justify-end">
+      <div
+        className={`absolute left-[-5px] top-0
+            ${isHome ? "w-[calc(100%-1rem)]" : "w-[calc(100%-2rem)]"}
+            overflow-visible border dark:border-slate-700 ${
+              showSuggestions
+                ? "rounded-b-3xl rounded-t-3xl shadow"
+                : "rounded-full "
+            }`}
       >
-        <div className="relative border-b shadow">
-          <CommandInput
-            value={query}
-            className="pr-14"
-            onValueChange={setQuery}
-            onFocus={() => setFocus(true)}
-            onBlur={() => setTimeout(() => setFocus(false), 300)}
-            onKeyDown={(e) => {
-              setFocus(true);
-              if (e.key === "Enter" && !showSuggestions) {
-                searchCallback(query);
-              }
-            }}
-          />
-          {showIcons && (
-            <div className="absolute bottom-0 right-7 top-0 my-auto flex sm:gap-3">
-              {Boolean(query) && <ClearX />}
-              <SearchIcon />
-            </div>
-          )}
-        </div>
+        <Command
+          className="rounded-3xl hover:shadow"
+          shouldFilter={false}
+          loop={true}
+        >
+          <div className="relative border-b shadow">
+            <CommandInput
+              value={query}
+              className="pr-14"
+              onValueChange={setQuery}
+              onFocus={() => setFocus(true)}
+              onBlur={() => setTimeout(() => setFocus(false), 300)}
+              onKeyDown={(e) => {
+                setFocus(true);
+                if (e.key === "Enter" && !showSuggestions) {
+                  searchCallback(query);
+                }
+              }}
+            />
+            {showIcons && (
+              <div className="absolute bottom-0 right-7 top-0 my-auto flex sm:gap-3">
+                {Boolean(query) && <ClearX />}
+                <SearchIcon />
+              </div>
+            )}
+          </div>
 
-        <CommandSuggestions />
-      </Command>
-
-      {isHome && <InfoPopover />}
+          <CommandSuggestions />
+        </Command>
+      </div>
+      <div className="ml-12 flex h-full items-center">
+        {isHome ? <InfoPopover /> : <AdvancedSearch searchQuery={query} />}
+      </div>
     </div>
   );
 
