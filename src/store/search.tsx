@@ -53,6 +53,7 @@ export const useSearch = create<SearchStore>((set) => ({
       let lesser = state.readTime[LESSER];
       let greater = state.readTime[GREATER];
 
+      //assure greater >= value >= lesser
       if (TIME_TYPE == GREATER) {
         greater = value;
         if (!!lesser && lesser < value) {

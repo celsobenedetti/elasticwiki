@@ -262,7 +262,7 @@ function SearchResult({ document }: { document: SearchHit<WikiDocument> }) {
   const cardContent = highlight?.content?.toString() || doc.content;
 
   return (
-    <Card className="max-w-full border-slate-100 dark:border-slate-900">
+    <Card className="max-w-full border-slate-100 hover:shadow dark:border-slate-900 dark:hover:border-slate-800">
       <a href={doc.url} target="#">
         <CardHeader className="group">
           <CardTitle className="text-indigo-500 group-hover:underline">
