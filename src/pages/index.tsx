@@ -1,4 +1,3 @@
-import { useSearch } from "@/store/search";
 import { Button } from "@/components/ui/button";
 import { memo, useCallback, useState } from "react";
 import { useRouter } from "next/router";

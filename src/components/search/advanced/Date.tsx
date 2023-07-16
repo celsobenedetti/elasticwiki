@@ -2,7 +2,6 @@ import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { CREATED_BEFORE, type DateType } from "@/lib/search";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -13,6 +12,8 @@ import {
 } from "@/components/ui/popover";
 import { SheetDescription } from "@/components/ui/sheet";
 import { useSearch } from "@/store/search";
+
+import { type DateType, CREATED_BEFORE } from "./types";
 
 export function DatePicker({ DATE_TYPE }: { DATE_TYPE: DateType }) {
   const title =
