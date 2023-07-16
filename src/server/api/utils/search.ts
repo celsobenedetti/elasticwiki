@@ -13,19 +13,21 @@ import {
   SEARCH_RESULTS_SIZE,
   TITLE_FIELD,
   DATE_FIELD,
+  TIME_FIELD,
 } from "@/lib/search";
 import { buildMatchClauses } from "@/lib/search/booleanQuery";
-import { buildDateQuery } from "@/lib/search/rangeQuery";
+import { buildDateQuery, buildReadTimeRange } from "@/lib/search/rangeQuery";
 import { type BooleanQueryInput } from "@/lib/search/schema";
 
 export function buildInfiniteSearchRequest(
   cursor: number,
   input: BooleanQueryInput
 ): SearchRequest {
-  const { query, dates } = input;
+  const { query, dates, readTime } = input;
 
   const { must, must_not, should } = buildMatchClauses(query);
   const dateRange = buildDateQuery(dates);
+  const readTimeRange = buildReadTimeRange(readTime);
 
   return {
     index: INDEX,
@@ -35,12 +37,11 @@ export function buildInfiniteSearchRequest(
     query: {
       bool: {
         should,
-        must: {
-          range: {
-            [DATE_FIELD]: dateRange,
-          },
+        must: [
+          { range: { [DATE_FIELD]: dateRange } },
+          { range: { [TIME_FIELD]: readTimeRange } },
           ...must,
-        },
+        ],
         must_not,
       },
     },

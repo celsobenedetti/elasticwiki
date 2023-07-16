@@ -1,11 +1,3 @@
-export interface WikiDocument {
-  title: string;
-  url: string;
-  content: string;
-  reading_time: number;
-  dt_creation: Date;
-}
-
 export interface KeywordsAgg {
   buckets: {
     bg_count: number;
@@ -34,7 +26,12 @@ export const INDEX = "wikipedia";
 export const CONTENT_FIELD = "content";
 export const TITLE_FIELD = "title";
 export const DATE_FIELD = "dt_creation";
+export const TIME_FIELD = "reading_time";
 
-export const CREATED_BEFORE = "before";
-export const CREATED_AFTER = "after";
-export type DateType = typeof CREATED_BEFORE | typeof CREATED_AFTER;
+export interface WikiDocument {
+  url: string;
+  [TITLE_FIELD]: string;
+  [CONTENT_FIELD]: string;
+  [TIME_FIELD]: number;
+  [DATE_FIELD]: Date;
+}

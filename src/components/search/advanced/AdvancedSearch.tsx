@@ -2,7 +2,6 @@ import { useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 
 import { useSearch } from "@/store/search";
-import { CREATED_AFTER, CREATED_BEFORE } from "@/lib/search";
 import { cn } from "@/lib/utils";
 
 import {
@@ -13,7 +12,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-
 import { HeroIcon } from "@/components/HeroIcon";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -21,6 +19,8 @@ import { Separator } from "@/components/ui/separator";
 import { DatePicker } from "./Date";
 import SearchForm from "./Form";
 import { buildQueryFromState, parseQueryToTextFieldsState } from "./state";
+import { CREATED_BEFORE, CREATED_AFTER, LESSER, GREATER } from "./types";
+import ReadTimeSlider from "./Slider";
 
 export function AdvancedSearch({
   searchQuery,
@@ -72,6 +72,11 @@ export function AdvancedSearch({
 
         <DatePicker DATE_TYPE={CREATED_BEFORE} />
         <DatePicker DATE_TYPE={CREATED_AFTER} />
+
+        <Separator />
+
+        <ReadTimeSlider TIME_TYPE={LESSER} />
+        <ReadTimeSlider TIME_TYPE={GREATER} />
 
         <Button
           onClick={() => searchCallback(buildQueryFromState(textFields))}

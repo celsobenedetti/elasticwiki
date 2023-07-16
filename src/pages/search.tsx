@@ -31,7 +31,7 @@ import { HighlightedText } from "@/components/ParsedHighlightedText";
 
 export default function Search() {
   const router = useRouter();
-  const { searchQuery, dates, setSearchQuery } = useSearch();
+  const { searchQuery, dates, setSearchQuery, readTime } = useSearch();
 
   const searchCallback = useCallback(
     (query: string) => {
@@ -44,7 +44,7 @@ export default function Search() {
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } =
     api.elastic.infiniteSearch.useInfiniteQuery(
-      { query: searchQuery, dates },
+      { query: searchQuery, dates, readTime },
       {
         initialCursor: 0,
         getNextPageParam: (lastPage) => {
