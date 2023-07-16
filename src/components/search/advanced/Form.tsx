@@ -21,6 +21,8 @@ export default function SearchForm() {
             onChange={(e) =>
               setTextField(TextField.ShouldTerms, e.target.value)
             }
+            placeholder="calculus mathematics..."
+            className="placeholder:text-slate-500 placeholder:text-opacity-50"
           />
         </div>
         <div>
@@ -33,6 +35,8 @@ export default function SearchForm() {
             onChange={(e) =>
               setTextField(TextField.MustPhrases, e.target.value)
             }
+            placeholder="arithmetic operations, differential calculus..."
+            className="placeholder:text-slate-500 placeholder:text-opacity-50"
           />
         </div>
       </div>
@@ -47,6 +51,8 @@ export default function SearchForm() {
             onChange={(e) =>
               setTextField(TextField.MustNotTerms, e.target.value)
             }
+            placeholder="matrices algebra..."
+            className="placeholder:text-slate-500 placeholder:text-opacity-50"
           />
         </div>
         <div>
@@ -59,6 +65,8 @@ export default function SearchForm() {
             onChange={(e) =>
               setTextField(TextField.MustNotPhrases, e.target.value)
             }
+            placeholder="euclidean geomtry, linear algebra..."
+            className="placeholder:text-slate-500 placeholder:text-opacity-50"
           />
         </div>
       </div>
