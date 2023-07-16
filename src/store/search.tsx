@@ -49,11 +49,28 @@ export const useSearch = create<SearchStore>((set) => ({
     [GREATER]: undefined,
   },
   setReadTime: (TIME_TYPE: ReadTimeType, value: number) => {
-    set((state) => ({
-      readTime: {
-        ...state.readTime,
-        [TIME_TYPE]: value,
-      },
-    }));
+    set((state) => {
+      let lesser = state.readTime[LESSER];
+      let greater = state.readTime[GREATER];
+
+      if (TIME_TYPE == GREATER) {
+        greater = value;
+        if (!!lesser && lesser < value) {
+          lesser = value;
+        }
+      } else {
+        lesser = value;
+        if (!!greater && greater > value) {
+          greater = value;
+        }
+      }
+
+      return {
+        readTime: {
+          [LESSER]: lesser,
+          [GREATER]: greater,
+        },
+      };
+    });
   },
 }));

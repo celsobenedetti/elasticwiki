@@ -75,8 +75,8 @@ export function AdvancedSearch({
 
         <Separator />
 
-        <ReadTimeSlider TIME_TYPE={LESSER} />
         <ReadTimeSlider TIME_TYPE={GREATER} />
+        <ReadTimeSlider TIME_TYPE={LESSER} />
 
         <Button
           onClick={() => searchCallback(buildQueryFromState(textFields))}

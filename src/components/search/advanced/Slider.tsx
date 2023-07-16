@@ -15,8 +15,8 @@ export default function ReadTimeSlider({
   return (
     <>
       <SheetDescription>
-        Read time <span className="font-bold">{TIME_TYPE}</span> than:{" "}
-        <span className="text-lg font-bold">{time}</span>
+        Read time <span className="font-bold">{TIME_TYPE}</span> than or equal
+        to: <span className="text-lg font-bold">{time}</span>
       </SheetDescription>
       <Slider
         min={1}
