@@ -12,14 +12,20 @@ import {
   PRE_TAG,
   SEARCH_RESULTS_SIZE,
   TITLE_FIELD,
+  DATE_FIELD,
 } from "@/lib/search";
-import { buildBooleanQuery } from "@/lib/search/booleanQuery";
+import { buildMatchClauses } from "@/lib/search/booleanQuery";
+import { buildDateQuery } from "@/lib/search/rangeQuery";
+import { type BooleanQueryInput } from "@/lib/search/schema";
 
 export function buildInfiniteSearchRequest(
   cursor: number,
-  query: string
+  input: BooleanQueryInput
 ): SearchRequest {
-  const { must, must_not, should } = buildBooleanQuery(query);
+  const { query, dates } = input;
+
+  const { must, must_not, should } = buildMatchClauses(query);
+  const dateRange = buildDateQuery(dates);
 
   return {
     index: INDEX,
@@ -29,7 +35,12 @@ export function buildInfiniteSearchRequest(
     query: {
       bool: {
         should,
-        must,
+        must: {
+          range: {
+            [DATE_FIELD]: dateRange,
+          },
+          ...must,
+        },
         must_not,
       },
     },
@@ -93,7 +104,7 @@ export function parseKeywordSuggestions(
 }
 
 export function buildAutocompleteSearchRequest(query: string): SearchRequest {
-  const { must, must_not, terms } = buildBooleanQuery(query, TITLE_FIELD);
+  const { must, must_not, terms } = buildMatchClauses(query, TITLE_FIELD);
 
   return {
     query: {

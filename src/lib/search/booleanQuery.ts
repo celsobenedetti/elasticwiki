@@ -17,7 +17,7 @@ For each following {query}, returns:
 !negatedTerm                => must_not: { match: {query} }
 regularTerms                => should: { match: {query}}
 */
-export function buildBooleanQuery(
+export function buildMatchClauses(
   input: string,
   field: string = CONTENT_FIELD
 ) {

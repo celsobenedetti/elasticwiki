@@ -4,11 +4,11 @@ import {
   stripPunctuations,
   trimMultipleWhitespaces,
 } from "@/lib/search";
-import { buildBooleanQuery } from "@/lib/search/booleanQuery";
+import { buildMatchClauses } from "@/lib/search/booleanQuery";
 import { type TextFieldsMap, TextField } from "./types";
 
 export function parseQueryToTextFieldsState(query: string): TextFieldsMap {
-  const { terms, must, must_not } = buildBooleanQuery(query);
+  const { terms, must, must_not } = buildMatchClauses(query);
   const fields = new Map<TextField, string>();
 
   fields.set(TextField.ShouldTerms, stripPunctuations(terms));

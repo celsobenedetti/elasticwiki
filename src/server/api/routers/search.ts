@@ -8,22 +8,18 @@ import {
   parseKeywordSuggestions,
   buildAutocompleteSearchRequest,
 } from "@/server/api/utils/search";
+import { BooleanQuerySchema } from "@/lib/search/schema";
 
 export const searchRouter = createTRPCRouter({
   infiniteSearch: searchProcedure
-    .input(
-      z.object({
-        query: z.string(),
-        cursor: z.number().nullish(), // <-- "cursor" needs to exist, but can be any type
-      })
-    )
+    .input(BooleanQuerySchema)
     .query(async ({ ctx, input }) => {
       const cursor = input.cursor ?? 0;
 
       const startTime = performance.now();
 
       const results = await ctx.elastic.search<WikiDocument>(
-        buildInfiniteSearchRequest(cursor, input.query)
+        buildInfiniteSearchRequest(cursor, input)
       );
 
       const suggestion = parseKeywordSuggestions(
