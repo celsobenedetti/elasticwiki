@@ -137,6 +137,10 @@ export default function SearchBar(props: Props) {
         className="cursor-pointer"
         key={doc._id}
       >
+        <HeroIcon
+          shape="magnifyingGlass"
+          className="mr-2 h-4 w-4 cursor-pointer text-slate-500"
+        />
         <HighlightedText
           className="suggestion-highlight not-italic"
           text={content || ""}
