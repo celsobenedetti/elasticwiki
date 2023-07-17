@@ -38,20 +38,24 @@ export interface WikiDocument {
 
 export type TextFieldsMap = Map<TextField, string>;
 
-export interface AdvancedSearchStore {
+export interface AdvancedSearchState {
   textFields: TextFieldsMap;
-  setInitialTextFields: (map: TextFieldsMap) => void;
-  setTextField: (type: TextField, value: string) => void;
   dates: {
     [CREATED_BEFORE]: Date | undefined;
     [CREATED_AFTER]: Date | undefined;
   };
-  setDate: (type: DateType, date: Date) => void;
   readTime: {
     [LESSER]: number | undefined;
     [GREATER]: number | undefined;
   };
+}
+
+export interface AdvancedSearchStore extends AdvancedSearchState {
+  setInitialTextFields: (map: TextFieldsMap) => void;
+  setTextField: (type: TextField, value: string) => void;
+  setDate: (type: DateType, date: Date) => void;
   setReadTime: (type: ReadTimeType, value: number) => void;
+  getAdvancedSearchState: () => AdvancedSearchState;
 }
 
 export enum TextField {

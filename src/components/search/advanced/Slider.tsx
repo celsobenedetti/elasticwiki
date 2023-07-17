@@ -1,15 +1,16 @@
-import { useSearch } from "@/store/search";
 import { type ReadTimeType } from "@/lib/search";
 
 import { SheetDescription } from "@/components/ui/sheet";
 import { Slider } from "@/components/ui/slider";
+
+import { useAdvancedSearch } from "./state";
 
 export default function ReadTimeSlider({
   TIME_TYPE,
 }: {
   TIME_TYPE: ReadTimeType;
 }) {
-  const { readTime, setReadTime } = useSearch();
+  const { readTime, setReadTime } = useAdvancedSearch();
   const time = readTime[TIME_TYPE];
 
   return (

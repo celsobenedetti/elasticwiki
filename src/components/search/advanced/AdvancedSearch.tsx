@@ -19,7 +19,11 @@ import { Separator } from "@/components/ui/separator";
 
 import { DatePicker } from "./Date";
 import SearchForm from "./Form";
-import { buildQueryFromState, parseQueryToTextFieldsState } from "./state";
+import {
+  buildQueryFromState,
+  parseQueryToTextFieldsState,
+  useAdvancedSearch,
+} from "./state";
 import ReadTimeSlider from "./Slider";
 
 export function AdvancedSearch({
@@ -29,7 +33,10 @@ export function AdvancedSearch({
   searchQuery: string;
   className?: string;
 }) {
-  const { setSearchQuery, textFields, setInitialTextFields } = useSearch();
+  const { setSearchQuery, setAdvancedSearchOptions } = useSearch();
+
+  const { textFields, setInitialTextFields, getAdvancedSearchState } =
+    useAdvancedSearch();
 
   useEffect(
     () => setInitialTextFields(parseQueryToTextFieldsState(searchQuery)),
@@ -41,6 +48,7 @@ export function AdvancedSearch({
     (searchQuery: string) => {
       if (!searchQuery) return;
 
+      setAdvancedSearchOptions(getAdvancedSearchState());
       setSearchQuery(searchQuery);
       router
         .push({
@@ -49,7 +57,7 @@ export function AdvancedSearch({
         })
         .catch(console.error);
     },
-    [router, setSearchQuery]
+    [router, setSearchQuery, getAdvancedSearchState, setAdvancedSearchOptions]
   );
 
   return (

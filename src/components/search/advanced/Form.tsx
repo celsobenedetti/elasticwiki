@@ -1,12 +1,12 @@
-import { useSearch } from "@/store/search";
 import { TextField } from "@/lib/search";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SheetDescription } from "@/components/ui/sheet";
+import { useAdvancedSearch } from "./state";
 
 export default function SearchForm() {
-  const { textFields, setTextField } = useSearch();
+  const { textFields, setTextField } = useAdvancedSearch();
   return (
     <section className="flex w-full flex-col gap-4 rounded-lg">
       <div className="border-l border-l-green-500 pl-2">

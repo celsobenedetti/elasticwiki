@@ -11,14 +11,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { SheetDescription } from "@/components/ui/sheet";
-import { useSearch } from "@/store/search";
 import { type DateType, CREATED_BEFORE } from "@/lib/search";
+import { useAdvancedSearch } from "./state";
 
 export function DatePicker({ DATE_TYPE }: { DATE_TYPE: DateType }) {
   const title =
     DATE_TYPE == CREATED_BEFORE ? "Created Before" : "Created After";
 
-  const { dates, setDate } = useSearch();
+  const { dates, setDate } = useAdvancedSearch();
   const date = dates[DATE_TYPE];
 
   return (

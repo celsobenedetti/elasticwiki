@@ -1,12 +1,81 @@
 import {
-  type TextFieldsMap,
-  extractMatchClauseTokens,
+  CREATED_AFTER,
+  CREATED_BEFORE,
+  type DateType,
+  GREATER,
+  LESSER,
   MatchType,
-  stripPunctuations,
+  type ReadTimeType,
   TextField,
+  extractMatchClauseTokens,
+  stripPunctuations,
   trimMultipleWhitespaces,
+  type AdvancedSearchStore,
+  type TextFieldsMap,
 } from "@/lib/search";
 import { buildMatchClauses } from "@/lib/search/booleanQuery";
+import { create } from "zustand";
+
+export const useAdvancedSearch = create<AdvancedSearchStore>((set, get) => ({
+  textFields: new Map(),
+  dates: {
+    [CREATED_BEFORE]: undefined,
+    [CREATED_AFTER]: undefined,
+  },
+  readTime: {
+    [LESSER]: undefined,
+    [GREATER]: undefined,
+  },
+
+  setInitialTextFields: (fields: TextFieldsMap) => set({ textFields: fields }),
+
+  setTextField: (field: TextField, value: string) => {
+    set((state) => ({
+      textFields: new Map(state.textFields).set(field, value),
+    }));
+  },
+
+  setDate: (DATE_TYPE: DateType, date: Date) => {
+    set((state) => ({
+      dates: {
+        ...state.dates,
+        [DATE_TYPE]: date,
+      },
+    }));
+  },
+
+  setReadTime: (TIME_TYPE: ReadTimeType, value: number) => {
+    set((state) => {
+      let lesser = state.readTime[LESSER];
+      let greater = state.readTime[GREATER];
+
+      //assure greater >= value >= lesser
+      if (TIME_TYPE == GREATER) {
+        greater = value;
+        if (!!lesser && lesser < value) {
+          lesser = value;
+        }
+      } else {
+        lesser = value;
+        if (!!greater && greater > value) {
+          greater = value;
+        }
+      }
+
+      return {
+        readTime: {
+          [LESSER]: lesser,
+          [GREATER]: greater,
+        },
+      };
+    });
+  },
+
+  getAdvancedSearchState: () => {
+    const { textFields, dates, readTime } = get();
+    return { textFields, dates, readTime };
+  },
+}));
 
 export function parseQueryToTextFieldsState(query: string): TextFieldsMap {
   const { terms, must, must_not } = buildMatchClauses(query);
