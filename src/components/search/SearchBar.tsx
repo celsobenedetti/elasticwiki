@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { type SearchHit } from "@elastic/elasticsearch/lib/api/types";
 
 import { HIGHLIGHT_TAG, type WikiDocument } from "@/lib/search";
@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/command";
 
 import { HeroIcon } from "@/components/HeroIcon";
-import LoadingSpinner from "@/components/LoadingSpinner";
 import { HighlightedText } from "@/components/ParsedHighlightedText";
 import InfoPopover from "@/components/InfoPopover";
 import { AdvancedSearch } from "./advanced";
@@ -30,11 +29,9 @@ export default function SearchBar(props: Props) {
   const { query, setQuery, searchCallback, showIcons, isHome } = props;
   const [isFocused, setFocus] = useState(false);
 
-  const { data, isFetching: isFetchingSuggestions } =
-    api.elastic.autocomplete.useQuery(
-      { query: query },
-      { enabled: query.length > 1 }
-    );
+  const debouncedQuery = useDebounce(query, 500);
+
+  const { data } = api.elastic.autocomplete.useQuery({ query: debouncedQuery });
 
   const acceptSuggestion = useCallback(
     (suggestion: string) => {
@@ -96,13 +93,6 @@ export default function SearchBar(props: Props) {
   );
 
   function CommandSuggestions() {
-    if (isFetchingSuggestions && isFocused) {
-      return (
-        <div className="flex w-full items-center justify-center p-1">
-          <LoadingSpinner className="h-5 w-5" />
-        </div>
-      );
-    }
     if (!showSuggestions) return;
 
     return (
@@ -173,4 +163,13 @@ export default function SearchBar(props: Props) {
       </button>
     );
   }
+}
+
+function useDebounce(value: string, delay: number) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+  return debouncedValue;
 }
