@@ -25,7 +25,7 @@ export function buildInfiniteSearchRequest(
 ): SearchRequest {
   const { query, dates, readTime } = input;
 
-  const { must, must_not, should } = buildMatchClauses(query);
+  const { must, must_not } = buildMatchClauses(query);
   const dateRange = buildDateQuery(dates);
   const readTimeRange = buildReadTimeRange(readTime);
 
@@ -36,7 +36,7 @@ export function buildInfiniteSearchRequest(
     _source_excludes: "content_unstemmed",
     query: {
       bool: {
-        should,
+        should: [],
         must: [
           { range: { [DATE_FIELD]: dateRange } },
           { range: { [TIME_FIELD]: readTimeRange } },

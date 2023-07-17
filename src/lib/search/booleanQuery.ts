@@ -31,7 +31,6 @@ function booleanQueryClauses(
 ) {
   const { terms, negatedTerms, quotedPhrases, negatedQuotedPhrases } = options;
 
-  const should = [] as QueryDslQueryContainer[];
   const must = [] as QueryDslQueryContainer[];
   const must_not = [] as QueryDslQueryContainer[];
 
@@ -40,14 +39,14 @@ function booleanQueryClauses(
   const toMatchPhrase = (s: string) => ({ match_phrase: toFieldObject(s) });
 
   if (terms.length) {
-    should.push(toMatch(terms));
+    must.push(toMatch(terms));
   }
 
   must.push(...quotedPhrases.map(toMatchPhrase));
   must_not.push(...negatedTerms.map(toMatch));
   must_not.push(...negatedQuotedPhrases.map(toMatchPhrase));
 
-  return { must, must_not, should, terms };
+  return { must, must_not, terms };
 }
 
 /** Parses input string into an search match options objects

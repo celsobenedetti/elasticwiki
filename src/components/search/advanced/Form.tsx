@@ -12,7 +12,7 @@ export default function SearchForm() {
       <div className="border-l border-l-green-500 pl-2">
         <div>
           <Label htmlFor="terms">
-            <span className=" text-green-500">should</span> match{" "}
+            <span className=" text-green-500">must</span> match{" "}
             <span className="font-bold">terms</span>:
           </Label>
           <Input
