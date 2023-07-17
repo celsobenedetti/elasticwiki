@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
 import { CREATED_BEFORE, CREATED_AFTER, LESSER, GREATER } from "@/lib/search";
@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
   SheetHeader,
@@ -34,7 +35,6 @@ export function AdvancedSearch({
   className?: string;
 }) {
   const { setSearchQuery, setAdvancedSearchOptions } = useSearch();
-
   const { textFields, setInitialTextFields, getAdvancedSearchState } =
     useAdvancedSearch();
 
@@ -46,6 +46,7 @@ export function AdvancedSearch({
   const router = useRouter();
   const searchCallback = useCallback(
     (searchQuery: string) => {
+      // setIsOpen(false);
       if (!searchQuery) return;
 
       setAdvancedSearchOptions(getAdvancedSearchState());
@@ -62,7 +63,7 @@ export function AdvancedSearch({
 
   return (
     <Sheet>
-      <SheetTrigger>
+      <SheetTrigger onClick={() => true}>
         <TriggerButton className={className} />
       </SheetTrigger>
 
@@ -86,13 +87,12 @@ export function AdvancedSearch({
         <ReadTimeSlider TIME_TYPE={GREATER} />
         <ReadTimeSlider TIME_TYPE={LESSER} />
 
-        <Button
+        <SheetClose
           onClick={() => searchCallback(buildQueryFromState(textFields))}
-          variant="secondary"
-          className="mx-auto w-1/2"
+          className="mx-auto h-10 w-1/2 rounded-md bg-secondary text-secondary-foreground hover:bg-secondary/80"
         >
           Search
-        </Button>
+        </SheetClose>
       </SheetContent>
     </Sheet>
   );
