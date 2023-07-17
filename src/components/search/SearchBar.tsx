@@ -103,7 +103,7 @@ export default function SearchBar(props: Props) {
           <Button
             onClick={() => searchCallback(query)}
             variant="secondary"
-            className="m-2 mx-auto h-7 w-1/2"
+            className="z-10 m-2 mx-auto h-7 w-1/2"
           >
             Search
           </Button>
