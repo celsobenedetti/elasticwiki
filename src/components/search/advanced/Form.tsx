@@ -22,6 +22,7 @@ export default function SearchForm() {
             }
             placeholder="calculus mathematics..."
             className="placeholder:text-slate-500 placeholder:text-opacity-50"
+            id="terms"
           />
         </div>
         <div>
@@ -36,12 +37,13 @@ export default function SearchForm() {
             }
             placeholder="arithmetic operations, differential calculus..."
             className="placeholder:text-slate-500 placeholder:text-opacity-50"
+            id="phrases"
           />
         </div>
       </div>
       <div className="border-l border-l-red-500 pl-2">
         <div>
-          <Label htmlFor="phrases">
+          <Label htmlFor="not_terms">
             <span className="text-red-400">must not</span> match{" "}
             <span className="font-bold">terms</span>:
           </Label>
@@ -52,10 +54,11 @@ export default function SearchForm() {
             }
             placeholder="matrices algebra..."
             className="placeholder:text-slate-500 placeholder:text-opacity-50"
+            id="not_terms"
           />
         </div>
         <div>
-          <Label htmlFor="phrases">
+          <Label htmlFor="not_phrases">
             <span className="text-red-400">must not</span> match{" "}
             <span className="font-bold">phrases</span>:
           </Label>
@@ -66,6 +69,7 @@ export default function SearchForm() {
             }
             placeholder="euclidean geomtry, linear algebra..."
             className="placeholder:text-slate-500 placeholder:text-opacity-50"
+            id="not_phrases"
           />
         </div>
       </div>
