@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 
 import { CREATED_BEFORE, CREATED_AFTER, LESSER, GREATER } from "@/lib/search";
@@ -15,7 +15,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { HeroIcon } from "@/components/HeroIcon";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
 import { DatePicker } from "./Date";
@@ -46,7 +45,6 @@ export function AdvancedSearch({
   const router = useRouter();
   const searchCallback = useCallback(
     (searchQuery: string) => {
-      // setIsOpen(false);
       if (!searchQuery) return;
 
       setAdvancedSearchOptions(getAdvancedSearchState());
