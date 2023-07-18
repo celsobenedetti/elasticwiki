@@ -25,7 +25,9 @@ export function buildInfiniteSearchRequest(
 ): SearchRequest {
   const { query, dates, readTime } = input;
 
-  const { must, must_not } = buildMatchClauses(query);
+  const { must, must_not } = buildMatchClauses(query, {
+    mustIncludeTerms: true,
+  });
   const dateRange = buildDateQuery(dates);
   const readTimeRange = buildReadTimeRange(readTime);
 
@@ -105,7 +107,9 @@ export function parseKeywordSuggestions(
 }
 
 export function buildAutocompleteSearchRequest(query: string): SearchRequest {
-  const { must, must_not, terms } = buildMatchClauses(query, TITLE_FIELD);
+  const { must, must_not, terms } = buildMatchClauses(query, {
+    field: TITLE_FIELD,
+  });
 
   return {
     query: {

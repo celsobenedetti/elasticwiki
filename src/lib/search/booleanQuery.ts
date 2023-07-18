@@ -19,18 +19,28 @@ regularTerms                => should: { match: {query}}
 */
 export function buildMatchClauses(
   input: string,
-  field: string = CONTENT_FIELD
+  // { field = CONTENT_FIELD, mustIncludeTerms = false }: { field?: string, mustIncludeTerms?: boolean } = {}
+  {
+    field = CONTENT_FIELD,
+    mustIncludeTerms = false,
+  }: { field?: string; mustIncludeTerms?: boolean } = {}
 ) {
-  return booleanQueryClauses(inputToBooleanOptions(input), field);
+  return booleanQueryClauses(
+    inputToBooleanOptions(input),
+    field,
+    mustIncludeTerms
+  );
 }
 
 /** Parses query options tokens into Elasticsearch boolean query match clause objects */
 function booleanQueryClauses(
   options: ReturnType<typeof inputToBooleanOptions>,
-  field: string
+  field: string,
+  mustIncludeTerms: boolean
 ) {
   const { terms, negatedTerms, quotedPhrases, negatedQuotedPhrases } = options;
 
+  const should = [] as QueryDslQueryContainer[];
   const must = [] as QueryDslQueryContainer[];
   const must_not = [] as QueryDslQueryContainer[];
 
@@ -39,14 +49,17 @@ function booleanQueryClauses(
   const toMatchPhrase = (s: string) => ({ match_phrase: toFieldObject(s) });
 
   if (terms.length) {
-    must.push(toMatch(terms));
+    should.push(toMatch(terms));
+    if (mustIncludeTerms) {
+      must.push(toMatch(terms));
+    }
   }
 
   must.push(...quotedPhrases.map(toMatchPhrase));
   must_not.push(...negatedTerms.map(toMatch));
   must_not.push(...negatedQuotedPhrases.map(toMatchPhrase));
 
-  return { must, must_not, terms };
+  return { must, must_not, should, terms };
 }
 
 /** Parses input string into an search match options objects
