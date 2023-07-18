@@ -17,17 +17,19 @@ export default function InfoPopover() {
         <p>Topics mainly include math and computer science</p>
         <Separator />
         <p>
-          Results will match <span className="font-bold">regular terms</span>,
-          unordered, and{" "}
-          <span className="font-bold">&quot;quoted phrases&quot;</span> in the
-          specified order{" "}
+          Regular <span className="font-bold text-success">terms</span> will be
+          matched unordered, and{" "}
+          <span className="font-bold text-success">
+            &quot;quoted phrases&quot;
+          </span>{" "}
+          matched in the specified order{" "}
         </p>
 
         <p>
-          To <span className="font-bold">exclude</span> terms or
-          &quot;phrases&quot;,
-          <span className="text-orange-600"> !negate</span> them with an{" "}
-          <span className="font-bold"> exclamation mark prefix</span>
+          You can <span className="font-bold">negate</span>{" "}
+          <span className="text-danger"> !terms </span> or
+          <span className="text-danger"> !&quot;quoted phrases&quot; </span>
+          to <span className="font-bold">exclude</span> from the search
         </p>
       </PopoverContent>
     </Popover>
