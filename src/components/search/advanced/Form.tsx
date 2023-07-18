@@ -67,7 +67,7 @@ export default function SearchForm() {
             onChange={(e) =>
               setTextField(TextField.MustNotPhrases, e.target.value)
             }
-            placeholder="euclidean geomtry, linear algebra..."
+            placeholder="euclidean geometry, linear algebra..."
             className="placeholder:text-slate-500 placeholder:text-opacity-50"
             id="not_phrases"
           />
