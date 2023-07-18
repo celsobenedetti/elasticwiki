@@ -21,6 +21,12 @@ export default {
       textColor: {
         active: colors.slate["600"],
         ["active-dark"]: colors.slate["500"],
+        success: colors.green[400],
+        danger: colors.red[400],
+      },
+      borderColor: {
+        success: colors.green[400],
+        danger: colors.red[400],
       },
     },
   },

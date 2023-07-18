@@ -9,10 +9,10 @@ export default function SearchForm() {
   const { textFields, setTextField } = useAdvancedSearch();
   return (
     <section className="flex w-full flex-col gap-4 rounded-lg">
-      <div className="border-l border-l-green-500 pl-2">
+      <div className="border-l border-l-success pl-2">
         <div>
           <Label htmlFor="terms">
-            <span className=" text-green-500">must</span> match{" "}
+            <span className=" text-success">must</span> match{" "}
             <span className="font-bold">terms</span>:
           </Label>
           <Input
@@ -27,7 +27,7 @@ export default function SearchForm() {
         </div>
         <div>
           <Label htmlFor="phrases">
-            <span className="text-green-500">must</span> match{" "}
+            <span className="text-success">must</span> match{" "}
             <span className="font-bold">phrases</span>:
           </Label>
           <Input
@@ -41,10 +41,10 @@ export default function SearchForm() {
           />
         </div>
       </div>
-      <div className="border-l border-l-red-500 pl-2">
+      <div className="border-l border-l-danger pl-2">
         <div>
           <Label htmlFor="not_terms">
-            <span className="text-red-400">must not</span> match{" "}
+            <span className="text-danger">must not</span> match{" "}
             <span className="font-bold">terms</span>:
           </Label>
           <Input
@@ -59,7 +59,7 @@ export default function SearchForm() {
         </div>
         <div>
           <Label htmlFor="not_phrases">
-            <span className="text-red-400">must not</span> match{" "}
+            <span className="text-danger">must not</span> match{" "}
             <span className="font-bold">phrases</span>:
           </Label>
           <Input
