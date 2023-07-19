@@ -27,7 +27,8 @@ export const useAdvancedSearch = create<AdvancedSearchStore>((set, get) => ({
     [GREATER]: undefined,
   },
 
-  setInitialTextFields: (fields: TextFieldsMap) => set({ textFields: fields }),
+  setInitialTextFields: (query: string) =>
+    set({ textFields: parseQueryToTextFieldsState(query) }),
 
   setTextField: (field: TextField, value: string) => {
     set((state) => ({
@@ -77,7 +78,7 @@ export const useAdvancedSearch = create<AdvancedSearchStore>((set, get) => ({
   },
 }));
 
-export function parseQueryToTextFieldsState(query: string): TextFieldsMap {
+function parseQueryToTextFieldsState(query: string): TextFieldsMap {
   const { terms, must, must_not } = buildMatchClauses(query);
   const fields = new Map<TextField, string>();
 

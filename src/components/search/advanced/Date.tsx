@@ -14,7 +14,7 @@ import { SheetDescription } from "@/components/ui/sheet";
 import { type DateType, CREATED_BEFORE } from "@/lib/search";
 import { useAdvancedSearch } from "./state";
 
-export function DatePicker({ DATE_TYPE }: { DATE_TYPE: DateType }) {
+export default function DatePicker({ DATE_TYPE }: { DATE_TYPE: DateType }) {
   const title =
     DATE_TYPE == CREATED_BEFORE ? "Created Before" : "Created After";
 

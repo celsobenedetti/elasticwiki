@@ -51,7 +51,7 @@ export interface AdvancedSearchState {
 }
 
 export interface AdvancedSearchStore extends AdvancedSearchState {
-  setInitialTextFields: (map: TextFieldsMap) => void;
+  setInitialTextFields: (query: string) => void;
   setTextField: (type: TextField, value: string) => void;
   setDate: (type: DateType, date: Date) => void;
   setReadTime: (type: ReadTimeType, value: number) => void;

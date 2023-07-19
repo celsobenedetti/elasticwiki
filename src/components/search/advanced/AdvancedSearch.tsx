@@ -17,14 +17,10 @@ import {
 import { HeroIcon } from "@/components/HeroIcon";
 import { Separator } from "@/components/ui/separator";
 
-import { DatePicker } from "./Date";
 import SearchForm from "./Form";
-import {
-  buildQueryFromState,
-  parseQueryToTextFieldsState,
-  useAdvancedSearch,
-} from "./state";
+import DatePicker from "./Date";
 import ReadTimeSlider from "./Slider";
+import { buildQueryFromState, useAdvancedSearch } from "./state";
 
 export function AdvancedSearch({
   searchQuery,
@@ -38,7 +34,7 @@ export function AdvancedSearch({
     useAdvancedSearch();
 
   useEffect(
-    () => setInitialTextFields(parseQueryToTextFieldsState(searchQuery)),
+    () => setInitialTextFields(searchQuery),
     [searchQuery, setInitialTextFields]
   );
 
@@ -61,7 +57,7 @@ export function AdvancedSearch({
 
   return (
     <Sheet>
-      <SheetTrigger onClick={() => true}>
+      <SheetTrigger>
         <TriggerButton className={className} />
       </SheetTrigger>
 
