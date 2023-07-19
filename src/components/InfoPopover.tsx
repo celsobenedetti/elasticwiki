@@ -17,11 +17,9 @@ export default function InfoPopover() {
         <p>Topics mainly include math and computer science</p>
         <Separator />
         <p>
-          Regular <span className="font-bold text-success">terms</span> will be
-          matched unordered, and{" "}
-          <span className="font-bold text-success">
-            &quot;quoted phrases&quot;
-          </span>{" "}
+          Regular <span className="text-success">terms</span> will be matched
+          unordered, and{" "}
+          <span className="text-success">&quot;quoted phrases&quot;</span>{" "}
           matched in the specified order{" "}
         </p>
 
