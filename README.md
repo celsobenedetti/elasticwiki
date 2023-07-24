@@ -1,6 +1,8 @@
-# Document Finder App
+# ElasticWiki
 
-> WIP
+Search engine web app based on Elasticsearch
+
+### Built with
 
 - [Next.js](https://nextjs.org)
 - [tRPC](https://trpc.io)
@@ -8,6 +10,24 @@
 - [Elasticsearch JavaScript Client](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/index.html)
 - [Tailwind CSS](https://tailwindcss.com)
 - [shadcn/ui](https://ui.shadcn.com/)
+
+## Features / Things Learned
+
+### Elasticsearch
+
+- Search text [highlighting](https://www.elastic.co/guide/en/elasticsearch/reference/current/highlighting.html#highlighting)
+- Keywords suggestions with [significant text aggregation](https://www.elastic.co/guide/en/elasticsearch/reference/8.8/search-aggregations-bucket-significanttext-aggregation.html)
+- "Did you mean" search suggestions with [Phrase Suggester](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesters.html#phrase-suggester) and [Shingle Token Filter](https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-shingle-tokenfilter.html)
+- Search bar autocompletion with [search_as_you_type field type](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-as-you-type.html#search-as-you-type)
+- [Stop words](https://en.wikipedia.org/wiki/Stop_words) handling with [Stop Token Filter](https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-stop-tokenfilter.html)
+- Advanced query filtering with [Boolean Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-bool-query.html)
+
+### Web
+
+- Modular and minimal styling with TailwindCSS and shadcn/ui
+- Infinite scrolling with TanStack Query [useInfiniteQuery](https://tanstack.com/query/v4/docs/react/reference/useInfiniteQuery)
+- E2E type safety with tRPC
+- External state/context management with Zustand
 
 ## Elasticsearch TLS
 
