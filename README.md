@@ -29,44 +29,19 @@ Search engine web app based on Elasticsearch
 - E2E type safety with tRPC
 - External state/context management with Zustand
 
-## Elasticsearch TLS
+## Points of improvement
 
-The `elastic-cluster.yml` has TLS enabled by default, all https communication must be authenticated
-
-It creates certificates authorizing `$ELASTIC_HOST_IP` as a valid ip to make https requests to
-
-The certificate is required for all connections to the cluster, including the Elasticsearch JavaScript Client used in the app.
-
-It can be copied from the container to the local FS
-
-```bash
-docker cp elasticsearch-es01-1:/usr/share/elasticsearch/config/certs/ca/ca.crt .
-# communicate to Elasticsearch
-curl --cacert ca.crt -u $ELASTIC_USER:$ELASTIC_PASSWORD $ELASTIC_HOST
-```
-
-The `ca.crt` is exported as the `$ELASTIC_CERT` variable to be consumed on the app and the python client on `build_index.py`
+- Scalable Elastic cluster on K8s
+- TLS management with Traefik
 
 ## Notes
 
 - [Elasticsearch](./docs/elasticsearch.md)
 - [tRPC](./docs/trpc.md)
 - [Terraform](./terraform/README.md)
+- [direnv](./docs/direnv.md)
 
-### Direnv
-
-[direnv](https://github.com/direnv/direnv) is an awesome tool for managing project specific environment variables
-
-```bash
-# cool examples
-export ELASTIC_HOST=https://localhost:9200
-export ELASTIC_CERT=$(cat ./certs/ca.crt)
-export TF_VAR_linode_pass=pass
-export TF_VAR_linode_tk=$LINODE_TOKEN
-export TF_VAR_ssh_key=$(cat ~/.ssh/my_key.pub)
-```
-
-## Refs
+- ## Refs
 
 - [shadcn/ui — Theming Wrapped in a Tailwind Plugin/Preset](https://www.youtube.com/watch?v=QJlTWj30krw&t=10s)
 - [TanStack Query infinite scrolling](https://tanstack.com/query/v4/docs/react/examples/react/load-more-infinite-scroll)
